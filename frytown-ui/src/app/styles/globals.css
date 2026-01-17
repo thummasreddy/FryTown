@@ -1,0 +1,150 @@
+:root {
+  --max: 1100px;
+  --pad: 16px;
+  --border: rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, Arial, sans-serif; }
+
+.site-header {
+  position: sticky;
+  top: 0;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  z-index: 50;
+}
+
+.nav-shell {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 12px var(--pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand {
+  font-weight: 800;
+  text-decoration: none;
+  color: black;
+  letter-spacing: 0.2px;
+}
+
+.hamburger {
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.nav-desktop { display: none; }
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.nav-item { position: relative; }
+
+.link {
+  text-decoration: none;
+  color: black;
+  padding: 10px 12px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.link:hover { background: rgba(0,0,0,0.04); }
+.link.active { background: rgba(0,0,0,0.06); }
+
+.link-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.dropdown {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  min-width: 200px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.dropdown-link {
+  display: block;
+  padding: 10px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: black;
+}
+.dropdown-link:hover { background: rgba(0,0,0,0.04); }
+
+.mobile {
+  display: none;
+  border-top: 1px solid var(--border);
+  background: white;
+}
+.mobile.open { display: block; }
+
+.mobile-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px var(--pad) 14px;
+  max-width: var(--max);
+  margin-inline: auto;
+}
+
+.mobile-link {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 10px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: black;
+}
+
+.mobile-link:hover { background: rgba(0,0,0,0.04); }
+
+.mobile-accordion {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.mobile-sub {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 6px 10px;
+}
+
+.mobile-sublink {
+  display: block;
+  padding: 10px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+/* Desktop breakpoint */
+@media (min-width: 900px) {
+  .hamburger { display: none; }
+  .nav-desktop { display: block; }
+  .mobile { display: none !important; }
+}
