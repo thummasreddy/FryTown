@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { NAV_ITEMS, NavGroup } from "./navbar.data";
+import { NAV_ITEMS, type NavGroup } from "./navbar.data";
 
 function useClickOutside<T extends HTMLElement>(
   ref: React.RefObject<T>,

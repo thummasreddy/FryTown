@@ -1,5 +1,3 @@
-import { Children } from "react";
-
 export type NavLink = { label: string; to: string };
 export type NavGroup = {
   label: string;
