@@ -5,10 +5,25 @@ import brandLogo from "../../../assets/Brand_FryTown.png";
 
 // User icon component with screen reader text
 const UserIcon = ({ showText = true }: { showText?: boolean }) => (
-  <>
-    <span className="user-icon" aria-hidden="true">👤</span>
+  <div className="user-icon-wrapper">
+    <svg 
+      className="user-icon" 
+      xmlns="http://www.w3.org/2000/svg" 
+      width="24" 
+      height="24" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
     {showText && <span className="visually-hidden">Account</span>}
-  </>
+  </div>
 );
 
 function useClickOutside(
@@ -109,7 +124,7 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
     <li className="nav-item" ref={wrapRef}>
       <NavLink
         to={item.to || '#'}
-        className={({ isActive }) => `link link-btn ${isActive ? 'active' : ''}`}
+        className={({ isActive }) => `link link-btn ${isActive ? 'active' : ''} ${item.label === 'Account' ? 'account-link' : ''}`}
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={(e) => {
@@ -117,7 +132,16 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
           setOpen((v) => !v);
         }}
       >
-        {item.label} <span aria-hidden="true">▾</span>
+        {item.label === 'Account' ? (
+          <>
+            <UserIcon showText={false} />
+            <span className="dropdown-arrow" aria-hidden="true">▾</span>
+          </>
+        ) : (
+          <>
+            {item.label} <span aria-hidden="true">▾</span>
+          </>
+        )}
       </NavLink>
 
       {open && (
@@ -163,7 +187,7 @@ function MobileNavItem({ item }: { item: NavGroup }) {
     return (
       <li className="mobile-item">
         <NavLink className="mobile-link" to={item.to!}>
-          {item.label === "Account" ? <><UserIcon showText={true} /> {item.label}</> : item.label}
+          {item.label === "Account" ? <UserIcon showText={true} /> : item.label}
         </NavLink>
       </li>
     );

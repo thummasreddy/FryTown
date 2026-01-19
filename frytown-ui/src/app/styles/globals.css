@@ -89,16 +89,31 @@ body { margin: 0; font-family: system-ui, Arial, sans-serif; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
 }
 
-.user-icon {
-  font-size: 1.25rem;
-  line-height: 1;
+.dropdown-arrow {
+  font-size: 0.7em;
+  margin-left: 2px;
+  opacity: 0.8;
+}
+
+.user-icon-wrapper {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.5em;
-  height: 1.5em;
+}
+
+.user-icon {
+  width: 24px;
+  height: 24px;
+  color: white;
+  transition: color 0.2s ease;
+}
+
+.account-link:hover .user-icon,
+.account-link:focus .user-icon {
+  color: #f0f0f0;
 }
 
 .visually-hidden {
