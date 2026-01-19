@@ -29,7 +29,16 @@ export default function Home() {
               borderRadius: '8px',
               overflow: 'hidden'
             }}>
-              <span style={{ color: '#9ca3af' }}>Franchise Opportunity Image</span>
+              <img 
+                src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
+                alt="Franchise Opportunity" 
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center'
+                }}
+              />
             </div>
           </div>
         </div>
@@ -48,15 +57,28 @@ export default function Home() {
           </div>
           <div className={styles.ctaImageContainer}>
             <div style={{ 
-              backgroundColor: '#f3f4f6', 
-              height: '400px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
+              width: '100%',
+              height: '400px',
               borderRadius: '8px',
               overflow: 'hidden'
             }}>
-              <span style={{ color: '#9ca3af' }}>Menu Highlights Image</span>
+              <img 
+                src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg" 
+                alt="Delicious Menu Highlights" 
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  display: 'block',
+                  backgroundColor: '#f3f4f6'
+                }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = 'https://images.unsplash.com/photo-1504674900247-087703934569?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80';
+                }}
+              />
             </div>
           </div>
         </div>
