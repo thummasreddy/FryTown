@@ -87,7 +87,7 @@
 .heroSlideButton {
   display: inline-flex;
   align-items: center;
-  background-color: #ff6b00;
+  background-color: rgb(252, 172, 0);
   color: white;
   border: none;
   padding: 1rem 2.5rem;
@@ -104,7 +104,7 @@
 }
 
 .heroSlideButton:hover {
-  background-color: #e05e00;
+  background-color: rgb(192, 0, 0);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
@@ -155,8 +155,8 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
+  background-color: rgb(255, 255, 255);
+  color: rgb(192, 0, 0);
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
@@ -390,7 +390,7 @@
 }
 
 .ctaButton {
-  background-color: #ff6b00;
+  background-color: rgb(252, 172, 0);
   color: white;
   padding: 0.75rem 2rem;
   border-radius: 50px;
@@ -405,7 +405,7 @@
 }
 
 .ctaButton:hover {
-  background-color: #e05e00;
+  background-color: rgb(192, 0, 0);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

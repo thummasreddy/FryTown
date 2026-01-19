@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import styles from './Footer.module.css';
+import logo from '../../../assets/Brand_FryTown.png';
 
 const socialLinks = [
   { name: 'Facebook', icon: 'facebook', url: '#' },
@@ -46,7 +47,11 @@ export default function Footer() {
       <div className={styles.footerContainer}>
         <div className={styles.logoSection}>
           <Link to="/" className={styles.logo} aria-label="FryTown Home">
-            FryTown
+            <img 
+              src={logo} 
+              alt="FryTown Logo"
+              className={styles.logoImage}
+            />
           </Link>
           <p className={styles.slogan}>
             Serving up crispy, delicious meals since 2023. Join us for an unforgettable flavor experience!

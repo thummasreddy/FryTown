@@ -13,7 +13,7 @@ body { margin: 0; font-family: system-ui, Arial, sans-serif; }
   background: black;
   border-bottom: 1px solid var(--border);
   z-index: 50;
-  border-bottom: 10px solid rgb(255, 166, 0);
+  border-bottom: 10px solid rgb(192, 0, 0);
 }
 
 .nav-shell {
@@ -80,8 +80,14 @@ body { margin: 0; font-family: system-ui, Arial, sans-serif; }
   
 }
 
-.link:hover { background: rgba(0,0,0,0.04); }
-.link.active { background: rgba(0,0,0,0.06); }
+.link:hover { 
+  color: rgb(252, 172, 0);
+  background: rgba(0,0,0,0.04); 
+}
+.link.active { 
+  color: rgb(192, 0, 0);
+  background: rgba(0,0,0,0.06); 
+}
 
 /* Account link specific styles */
 .account-link {
@@ -113,7 +119,7 @@ body { margin: 0; font-family: system-ui, Arial, sans-serif; }
 
 .account-link:hover .user-icon,
 .account-link:focus .user-icon {
-  color: #f0f0f0;
+  color: rgb(192, 0, 0);
 }
 
 .visually-hidden {

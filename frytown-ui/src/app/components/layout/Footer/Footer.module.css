@@ -1,42 +1,53 @@
 .footer {
   background-color: #1a1a1a;
   color: #ffffff;
-  padding: 4rem 2rem 2rem;
+  padding: 3rem 2rem 2rem;
   font-family: 'Arial', sans-serif;
+  overflow: hidden;
 }
 
 .footerContainer {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
+  grid-template-columns: 300px repeat(auto-fit, minmax(200px, 1fr));
+  gap: 3rem;
   padding: 0 1rem;
+  align-items: flex-start;
 }
 
 .logoSection {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  margin-top: -1.5rem;
 }
 
 .logo {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #ff6b35;
+  display: inline-block;
   text-decoration: none;
+}
+
+.logoImage {
+  height: 200px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
 }
 
 .slogan {
   color: #a0a0a0;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-top: -1rem;
+  max-width: 280px;
 }
 
 .socialIcons {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 1.2rem;
+  margin-top: 1.5rem;
 }
 
 .socialLink {
@@ -46,11 +57,11 @@
 }
 
 .socialLink:hover {
-  color: #ff6b35;
+  color: rgb(252, 172, 0);
 }
 
 .linksSection h3 {
-  color: #ff6b35;
+  color: rgb(255, 255, 255);
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
   position: relative;
