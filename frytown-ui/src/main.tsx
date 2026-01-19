@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
+import { history } from "./app/utils/history";
 import App from "./App";
 import "./app/styles/globals.css";
 
@@ -10,10 +11,17 @@ if (!rootEl) {
   throw new Error("Root element #root not found");
 }
 
+// Add a global scroll to top function
+window.scrollToTop = () => {
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+};
+
 createRoot(rootEl).render(
   <StrictMode>
-    <BrowserRouter>
+    <Router location={history.location} navigator={history}>
       <App />
-    </BrowserRouter>
+    </Router>
   </StrictMode>
 );

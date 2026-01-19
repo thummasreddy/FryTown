@@ -32,10 +32,22 @@ export default function Navbar() {
   // Close mobile menu on route change
   useEffect(() => setMobileOpen(false), [location.pathname]);
 
+  const handleHomeClick = (e: React.MouseEvent) => {
+    // Only handle if this is a click on the home link (not a child element)
+    if (e.currentTarget === e.target) {
+      window.scrollToTop?.();
+    }
+  };
+
   return (
     <header className="site-header">
       <div className="nav-shell">
-        <Link to="/" className="brand" aria-label="Go to home">
+        <Link 
+          to="/" 
+          className="brand" 
+          aria-label="Go to home"
+          onClick={handleHomeClick}
+        >
           <img className="brand-logo" src={brandLogo} alt="" aria-hidden="true" />
         </Link>
 
