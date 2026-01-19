@@ -1,6 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { NAV_ITEMS, type NavGroup } from "./navbar.data";
+import brandLogo from "../../../assets/Brand_FryTown.png";
+
+// User icon component with screen reader text
+const UserIcon = ({ showText = true }: { showText?: boolean }) => (
+  <>
+    <span className="user-icon" aria-hidden="true">👤</span>
+    {showText && <span className="visually-hidden">Account</span>}
+  </>
+);
 
 function useClickOutside<T extends HTMLElement>(
   ref: React.RefObject<T>,
@@ -27,7 +36,7 @@ export default function Navbar() {
     <header className="site-header">
       <div className="nav-shell">
         <Link to="/" className="brand" aria-label="Go to home">
-          FryTown
+          <img className="brand-logo" src={brandLogo} alt="" aria-hidden="true" />
         </Link>
 
         <button
@@ -74,8 +83,12 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
   if (!hasChildren) {
     return (
       <li className="nav-item">
-        <NavLink className={({ isActive }) => (isActive ? "link active" : "link")} to={item.to!}>
-          {item.label}
+        <NavLink 
+          className={({ isActive }) => `link ${isActive ? 'active' : ''} ${item.label === 'Account' ? 'account-link' : ''}`} 
+          to={item.to!}
+          aria-label={item.label === "Account" ? "Account" : undefined}
+        >
+          {item.label === "Account" ? <UserIcon showText={false} /> : item.label}
         </NavLink>
       </li>
     );
@@ -136,7 +149,7 @@ function MobileNavItem({ item }: { item: NavGroup }) {
     return (
       <li className="mobile-item">
         <NavLink className="mobile-link" to={item.to!}>
-          {item.label}
+          {item.label === "Account" ? <><UserIcon showText={true} /> {item.label}</> : item.label}
         </NavLink>
       </li>
     );

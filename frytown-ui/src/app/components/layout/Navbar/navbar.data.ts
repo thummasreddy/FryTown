@@ -12,27 +12,27 @@ export const NAV_ITEMS: NavGroup[] = [
     label: "Menu",
     to: "/menu",
     children: [
-      { label: "Fries", to: "/menu#fries" },
-      { label: "Specialty", to: "/menu#specialty" },
-      { label: "Dips", to: "/menu#dips" },
-      { label: "Drinks", to: "/menu#drinks" },
+      { label: "Fries", to: "/menu/fries" },
+      { label: "Specialty", to: "/menu/specialty" },
+      { label: "Dips", to: "/menu/dips" },
+      { label: "Drinks", to: "/menu/drinks" },
     ],
   },
   {
     label: "Promotions",
     to: "/promotions",
     children: [
-      { label: "Combos", to: "/promotions#combos" },
-      { label: "Offers", to: "/promotions#offers" },
+      { label: "Combos", to: "/promotions/combos" },
+      { label: "Offers", to: "/promotions/offers" },
     ],
   },
   {
     label: "Franchising",
     to: "/franchising",
     children: [
-      { label: "Why Partner", to: "/franchising#why" },
-      { label: "Investment", to: "/franchising#investment" },
-      { label: "Apply", to: "/franchising#apply" },
+      { label: "Why Partner", to: "/franchising/why" },
+      { label: "Investment", to: "/franchising/investment" },
+      { label: "Apply", to: "/franchising/apply" },
     ],
   },
   {
