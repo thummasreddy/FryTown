@@ -1,7 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { Router } from "react-router-dom";
-import { history } from "./app/utils/history";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./app/styles/globals.css";
 
@@ -20,8 +19,8 @@ window.scrollToTop = () => {
 
 createRoot(rootEl).render(
   <StrictMode>
-    <Router location={history.location} navigator={history}>
+    <BrowserRouter>
       <App />
-    </Router>
+    </BrowserRouter>
   </StrictMode>
 );

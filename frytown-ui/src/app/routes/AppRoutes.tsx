@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
 import Franchising from "../pages/Franchising/Franchising";
@@ -8,18 +8,49 @@ import Account from "../pages/Account/Account";
 import Login from "../pages/Account/Login";
 import Register from "../pages/Account/Register";
 
+// Layout component for nested routes
+const NestedLayout = () => (
+  <div className="nested-route">
+    <Outlet />
+  </div>
+);
+
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
-      <Route path="/franchising" element={<Franchising />} />
-      <Route path="/promotions" element={<Promotions />} />
-      <Route path="/menu" element={<Menu />} />
+      
+      {/* Menu Routes */}
+      <Route path="/menu" element={<NestedLayout />}>
+        <Route index element={<Menu />} />
+        <Route path="fries" element={<Menu initialTab="fries" />} />
+        <Route path="specialty" element={<Menu initialTab="specialty" />} />
+        <Route path="dips" element={<Menu initialTab="dips" />} />
+        <Route path="drinks" element={<Menu initialTab="drinks" />} />
+      </Route>
 
-      <Route path="/account" element={<Account />} />
-      <Route path="/account/login" element={<Login />} />
-      <Route path="/account/register" element={<Register />} />
+      {/* Promotions Routes */}
+      <Route path="/promotions" element={<NestedLayout />}>
+        <Route index element={<Promotions />} />
+        <Route path="combos" element={<Promotions initialTab="combos" />} />
+        <Route path="offers" element={<Promotions initialTab="offers" />} />
+      </Route>
+
+      {/* Franchising Routes */}
+      <Route path="/franchising" element={<NestedLayout />}>
+        <Route index element={<Franchising />} />
+        <Route path="why" element={<Franchising initialTab="why" />} />
+        <Route path="investment" element={<Franchising initialTab="investment" />} />
+        <Route path="apply" element={<Franchising initialTab="apply" />} />
+      </Route>
+
+      {/* Account Routes */}
+      <Route path="/account" element={<NestedLayout />}>
+        <Route index element={<Account />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+      </Route>
     </Routes>
   );
 }

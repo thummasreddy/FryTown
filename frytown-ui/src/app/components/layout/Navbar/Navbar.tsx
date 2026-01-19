@@ -11,14 +11,14 @@ const UserIcon = ({ showText = true }: { showText?: boolean }) => (
   </>
 );
 
-function useClickOutside<T extends HTMLElement>(
-  ref: React.RefObject<T>,
+function useClickOutside(
+  ref: React.RefObject<HTMLElement | null>,
   handler: () => void
 ) {
   useEffect(() => {
     const onMouseDown = (e: MouseEvent) => {
-      if (!ref.current) return;
-      if (!ref.current.contains(e.target as Node)) handler();
+      if (!ref.current || !(e.target instanceof Node)) return;
+      if (!ref.current.contains(e.target)) handler();
     };
     document.addEventListener("mousedown", onMouseDown);
     return () => document.removeEventListener("mousedown", onMouseDown);
@@ -33,10 +33,8 @@ export default function Navbar() {
   useEffect(() => setMobileOpen(false), [location.pathname]);
 
   const handleHomeClick = (e: React.MouseEvent) => {
-    // Only handle if this is a click on the home link (not a child element)
-    if (e.currentTarget === e.target) {
-      window.scrollToTop?.();
-    }
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -97,8 +95,9 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
       <li className="nav-item">
         <NavLink 
           className={({ isActive }) => `link ${isActive ? 'active' : ''} ${item.label === 'Account' ? 'account-link' : ''}`} 
-          to={item.to!}
+          to={item.to || '#'}
           aria-label={item.label === "Account" ? "Account" : undefined}
+          end
         >
           {item.label === "Account" ? <UserIcon showText={false} /> : item.label}
         </NavLink>
@@ -108,15 +107,18 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
 
   return (
     <li className="nav-item" ref={wrapRef}>
-      <button
-        type="button"
-        className="link link-btn"
+      <NavLink
+        to={item.to || '#'}
+        className={({ isActive }) => `link link-btn ${isActive ? 'active' : ''}`}
         aria-haspopup="menu"
         aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
+        onClick={(e) => {
+          e.preventDefault();
+          setOpen((v) => !v);
+        }}
       >
         {item.label} <span aria-hidden="true">▾</span>
-      </button>
+      </NavLink>
 
       {open && (
         <div className="dropdown" role="menu" aria-label={`${item.label} submenu`}>
@@ -124,7 +126,7 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
             <NavLink
               key={c.to}
               to={c.to}
-              className="dropdown-link"
+              className={({ isActive }) => `dropdown-link ${isActive ? 'active' : ''}`}
               role="menuitem"
               onClick={() => setOpen(false)}
             >
