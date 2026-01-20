@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   FaUser, FaEnvelope, FaLock, FaPhone,
   FaArrowRight, FaGoogle, FaFacebook, FaCheckCircle
@@ -196,7 +197,7 @@ export default function Register() {
           </form>
 
           <div className={styles.loginLink}>
-            Already have an account? <a href="/login">Sign in</a>
+            Already have an account? <Link to="/account/login">Sign in</Link>
           </div>
         </div>
       </section>

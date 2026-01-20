@@ -450,19 +450,15 @@ textarea:focus-visible {
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-
   font-weight: 950;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: #fff;
-
   background: rgb(252, 172, 0);
-  box-shadow: 0 18px 46px rgba(192, 0, 0, 0.22);
   transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
   position: relative;
   overflow: hidden;
@@ -479,7 +475,6 @@ textarea:focus-visible {
 
 .submitButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 22px 56px rgba(192, 0, 0, 0.28);
   filter: saturate(1.06);
   background: rgb(192, 0, 0);
 }
