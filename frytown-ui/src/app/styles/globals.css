@@ -1,3 +1,11 @@
+html.noScroll,
+body.noScroll {
+  overflow: hidden !important;
+  height: 100% !important;
+}
+
+
+
 :root {
   --max: 1100px;
   --pad: 16px;
