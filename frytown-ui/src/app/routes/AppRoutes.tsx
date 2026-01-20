@@ -7,6 +7,7 @@ import Menu from "../pages/Menu/Menu";
 import Account from "../pages/Account/Account";
 import Login from "../pages/Account/Login";
 import Register from "../pages/Account/Register";
+import ForgotPassword from "../pages/Account/ForgotPassword";
 
 // Layout component for nested routes
 const NestedLayout = () => (
@@ -50,6 +51,7 @@ export default function AppRoutes() {
         <Route index element={<Account />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
       </Route>
     </Routes>
   );
