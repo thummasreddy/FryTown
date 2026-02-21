@@ -13,6 +13,7 @@ export const NAV_ITEMS: NavGroup[] = [
     to: "/menu",
     children: [
       { label: "Fries", to: "/menu/fries" },
+      { label: "Build Your Fries", to: "/menu/build-your-fries" },
       { label: "Specialty", to: "/menu/specialty" },
       { label: "Dips", to: "/menu/dips" },
       { label: "Drinks", to: "/menu/drinks" },

@@ -25,10 +25,13 @@ export default function AppRoutes() {
       {/* Menu Routes */}
       <Route path="/menu" element={<NestedLayout />}>
         <Route index element={<Menu />} />
-        <Route path="fries" element={<Menu initialTab="fries" />} />
+        <Route path="fries" element={<Menu initialTab="classic" />} />
+        <Route path="classic" element={<Menu initialTab="classic" />} />
         <Route path="specialty" element={<Menu initialTab="specialty" />} />
+        <Route path="build-your-fries" element={<Menu initialTab="build-your-fries" />} />
         <Route path="dips" element={<Menu initialTab="dips" />} />
-        <Route path="drinks" element={<Menu initialTab="drinks" />} />
+        <Route path="drinks" element={<Menu initialTab="beverages" />} />
+        <Route path="beverages" element={<Menu initialTab="beverages" />} />
       </Route>
 
       {/* Promotions Routes */}
