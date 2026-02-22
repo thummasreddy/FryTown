@@ -36,7 +36,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
+  color: var(--text-white);
 }
 
 .heroSlide::before {
@@ -58,7 +58,7 @@
 .heroSlideContent {
   position: relative;
   z-index: 2;
-  max-width: 1200px;
+  max-width: var(--max-width);
   width: 90%;
   padding: 2rem;
   text-align: center;
@@ -87,24 +87,24 @@
 .heroSlideButton {
   display: inline-flex;
   align-items: center;
-  background-color: rgb(252, 172, 0);
-  color: white;
+  background-color: var(--accent);
+  color: var(--text-white);
   border: none;
   padding: 1rem 2.5rem;
   font-size: 1.1rem;
   font-weight: 600;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   text-transform: uppercase;
   letter-spacing: 1px;
   text-decoration: none;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
   animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
 .heroSlideButton:hover {
-  background-color: rgb(192, 0, 0);
+  background-color: var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
@@ -138,12 +138,12 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .heroDot:hover,
 .heroDot.active {
-  background-color: #fff;
+  background-color: var(--bg-white);
   transform: scale(1.2);
 }
 
@@ -155,8 +155,8 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: rgb(255, 255, 255);
-  color: rgb(192, 0, 0);
+  background-color: var(--bg-white);
+  color: var(--primary);
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
@@ -164,13 +164,14 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   opacity: 0.7;
 }
 
 .heroNav:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.9);
   opacity: 1;
+  transform: translateY(-50%) scale(1.1);
 }
 
 .heroNavPrev {
@@ -239,17 +240,17 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   padding: 4rem 2rem;
-  max-width: 1400px;
+  max-width: var(--max-width);
   margin: 0 auto;
 }
 
 .featureCard {
   padding: 2.5rem;
-  border-radius: 12px;
-  color: white;
+  border-radius: var(--radius-md);
+  color: var(--text-white);
   position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: var(--transition);
   min-height: 250px;
   display: flex;
   flex-direction: column;
@@ -258,15 +259,15 @@
 
 .featureCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .primaryFeature {
-  background: linear-gradient(135deg, #ff6b00, #ff8c00);
+  background: linear-gradient(135deg, var(--accent), #ff8c00);
 }
 
 .secondaryFeature {
-  background: linear-gradient(135deg, #2c3e50, #3498db);
+  background: linear-gradient(135deg, var(--text-heading), #3498db);
 }
 
 .featureCard h3 {
@@ -283,12 +284,12 @@
 }
 
 .featureLink {
-  color: white;
+  color: var(--text-white);
   text-decoration: none;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   font-size: 1.05rem;
 }
 
@@ -347,7 +348,7 @@
   justify-content: center;
   overflow: hidden;
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
-  color: white;
+  color: var(--text-white);
   text-align: center;
   padding: 2rem;
 }
@@ -358,7 +359,7 @@
 }
 
 .ctaContent {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -378,44 +379,45 @@
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 1.5rem;
-  color: #1a1a1a;
+  color: var(--text-heading);
   letter-spacing: 1px;
 }
 
 .ctaSubtitle {
   font-size: 1.25rem;
-  color: #4a4a4a;
+  color: var(--text-main);
   margin-bottom: 2rem;
   line-height: 1.6;
 }
 
 .ctaButton {
-  background-color: rgb(252, 172, 0);
-  color: white;
+  background-color: var(--accent);
+  color: var(--text-white);
   padding: 0.75rem 2rem;
   border-radius: 50px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   text-decoration: none;
   border: none;
   cursor: pointer;
   font-size: 0.9rem;
+  display: inline-block;
 }
 
 .ctaButton:hover {
-  background-color: rgb(192, 0, 0);
+  background-color: var(--primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
 }
 
 .ctaImageContainer {
   flex: 1;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition);
 }
 
 .ctaImageContainer:hover {

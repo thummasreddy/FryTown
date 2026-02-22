@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Menu.module.css';
+import { useCart } from '../../context/CartContext';
 
 // Import images directly
 import OriginalFries from '../../assets/Original_French_Fries.png';
@@ -67,6 +68,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
   const [activeTab, setActiveTab] = useState<MenuTab>(initialTab);
   const location = useLocation();
   const navigate = useNavigate();
+  const { addItem } = useCart();
   
   // Build Your Fries state
   const [customization, setCustomization] = useState<FriesCustomization>({
@@ -184,6 +186,46 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
       }
       return { ...prev, flavors };
     });
+  };
+
+  const handleAddToCart = () => {
+    if (!customization.size || !customization.style || customization.flavors.length === 0) {
+      return;
+    }
+
+    const customFriesItem = {
+      id: `custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      name: 'Custom Build Your Fries',
+      price: calculateTotal(),
+      image: OriginalFries,
+      customizations: {
+        size: customization.size,
+        style: customization.style,
+        flavors: customization.flavors,
+      },
+      type: 'custom' as const,
+    };
+
+    addItem(customFriesItem);
+    
+    // Reset customization after adding to cart
+    setCustomization({
+      size: '',
+      style: '',
+      flavors: [],
+    });
+  };
+
+  const handleAddMenuItemToCart = (item: MenuItem) => {
+    const cartItem = {
+      id: item.id,
+      name: item.name,
+      price: parseInt(item.price.replace('₹', '')),
+      image: item.image,
+      type: 'regular' as const,
+    };
+
+    addItem(cartItem);
   };
 
   const calculateTotal = () => {
@@ -439,12 +481,35 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
     },
   ];
 
-  const renderBuildYourOwnFries = () => (
-    <div className={`${styles.menuItem} ${styles.buildYourOwn}`}>
-      <h2 className={styles.buildYourOwnTitle}>Build Your Fries</h2>
-      <p className={styles.buildYourOwnSubtitle}>Create your perfect fries with your choice of size, style, and flavor!</p>
+  const renderBuildYourOwnFries = () => {
+    const isSizeSelected = !!customization.size;
+    const isStyleSelected = !!customization.style;
+    const isFlavorSelected = customization.flavors.length > 0;
+    
+    return (
+      <div className={`${styles.menuItem} ${styles.buildYourOwn}`}>
+        {/* Progress Indicator */}
+        <div className={styles.progressIndicator}>
+          <div className={`${styles.progressStep} ${isSizeSelected ? styles.completed : styles.active}`}>
+            <div className={styles.progressStepNumber}>1</div>
+            <div className={styles.progressStepLabel}>Size</div>
+          </div>
+          <div className={`${styles.progressConnector} ${isSizeSelected ? styles.completed : ''}`}></div>
+          <div className={`${styles.progressStep} ${isStyleSelected ? styles.completed : (isSizeSelected ? styles.active : '')}`}>
+            <div className={styles.progressStepNumber}>2</div>
+            <div className={styles.progressStepLabel}>Style</div>
+          </div>
+          <div className={`${styles.progressConnector} ${isStyleSelected ? styles.completed : ''}`}></div>
+          <div className={`${styles.progressStep} ${isFlavorSelected ? styles.completed : (isStyleSelected ? styles.active : '')}`}>
+            <div className={styles.progressStepNumber}>3</div>
+            <div className={styles.progressStepLabel}>Flavor</div>
+          </div>
+        </div>
+        
+        <div className={styles.buildYourOwnContent}>
+          <p className={styles.buildYourOwnSubtitle}>Create your perfect fries with your choice of size, style, and flavor!</p>
       
-      <div className={styles.buildSection}>
+      <div className={`${styles.buildSection} ${isSizeSelected ? styles.completed : ''}`}>
         <h3 className={styles.sectionTitle}>PICK YOUR SIZE</h3>
         <div className={styles.optionGroup}>
           {sizes.map(size => (
@@ -462,7 +527,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
         </div>
       </div>
 
-      <div className={styles.buildSection}>
+      <div className={`${styles.buildSection} ${isStyleSelected ? styles.completed : ''}`}>
         <h3 className={styles.sectionTitle}>PICK YOUR STYLE</h3>
         <div className={styles.optionGroup}>
           {fryStyles.map(style => (
@@ -481,7 +546,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
         </div>
       </div>
 
-      <div className={styles.buildSection}>
+      <div className={`${styles.buildSection} ${isFlavorSelected ? styles.completed : ''}`}>
         <h3 className={styles.sectionTitle}>PICK YOUR FLAVOR</h3>
         
         <div className={styles.flavorCategory}>
@@ -550,18 +615,21 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
         
         <div className={styles.totalPrice}>
           <span className={styles.totalLabel}>Total:</span>
-          <span className={styles.totalAmount}>₹{calculateTotal()}</span>
+          <span className={`${styles.totalAmount} ${styles.updating}`}>₹{calculateTotal()}</span>
         </div>
         
         <button 
           className={styles.addToCartButton}
           disabled={!customization.size || !customization.style || customization.flavors.length === 0}
+          onClick={handleAddToCart}
         >
           Add to Cart - ₹{calculateTotal()}
         </button>
       </div>
-    </div>
-  );
+        </div>
+      </div>
+    );
+  };
 
   const renderMenuItems = (items: MenuItem[]) => {
     return items.map((item) => (
@@ -575,7 +643,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
           <p>{item.description}</p>
           <div className={styles.itemFooter}>
             <span className={styles.price}>{item.price}</span>
-            <button className={styles.addToCart}>Add to Cart</button>
+            <button className={styles.addToCart} onClick={() => handleAddMenuItemToCart(item)}>Add to Cart</button>
           </div>
         </div>
       </div>

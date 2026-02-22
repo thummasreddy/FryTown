@@ -1,5 +1,3 @@
-import type { ReactNode } from 'react';
-
 type CTASectionProps = {
   title: string;
   subtitle: string;

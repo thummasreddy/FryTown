@@ -2,15 +2,15 @@
 
 /* Menu Container - Modern consistent styling */
 .menuContainer {
-  max-width: 1440px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 3rem 2rem;
-  background: #ffffff;
+  padding: 5rem 2rem 3rem 2rem;
+  background: var(--bg-white);
   position: relative;
   z-index: 10;
   margin-top: -60px;
   border-radius: 32px 32px 0 0;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-lg);
 }
 
 /* Tabs - Modern pill-style tabs */
@@ -18,47 +18,50 @@
   display: flex;
   justify-content: center;
   gap: 0.75rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
   flex-wrap: wrap;
   padding: 0.5rem;
-  background: #fafafa;
-  border-radius: 9999px;
+  background: var(--bg-light);
+  border-radius: var(--radius-full);
   max-width: fit-content;
   margin-left: auto;
   margin-right: auto;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
+  margin-top: 1rem;
 }
 
 .tab {
   position: relative;
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   background: transparent;
-  color: #4a4a4a;
+  color: var(--text-main);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition);
   text-transform: capitalize;
   letter-spacing: 0.01em;
   overflow: hidden;
+  z-index: 1;
 }
 
 .tab::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: #ffffff;
-  border-radius: 9999px;
+  background: var(--bg-white);
+  border-radius: var(--radius-full);
   opacity: 0;
   transform: scale(0.8);
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  z-index: -1;
 }
 
 .tab:hover {
-  color: #c00000;
+  color: var(--primary);
 }
 
 .tab:hover::before {
@@ -67,18 +70,18 @@
 }
 
 .activeTab {
-  color: white;
+  color: var(--text-white);
 }
 
 .activeTab::before {
   opacity: 1;
   transform: scale(1);
-  background: #c00000;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  background: var(--primary);
+  box-shadow: var(--shadow-md);
 }
 
 .activeTab:hover {
-  color: white;
+  color: var(--text-white);
 }
 
 /* Menu Content */
@@ -92,21 +95,21 @@
   margin-bottom: 3rem;
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text-heading);
   padding-bottom: 0.75rem;
-  border-bottom: 2px solid #f3f4f6;
+  border-bottom: 2px solid var(--border);
 }
 
 /* ===== Build Your Fries - Modern Card Style ===== */
 .buildYourOwn {
-  background: #ffffff;
+  background: var(--bg-white);
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-  transition: all 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
   position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  padding: 2rem;
+  border: 1px solid var(--border);
+  padding: 0;
   margin-bottom: 2rem;
 }
 
@@ -126,24 +129,116 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0;
-  transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition);
 }
 
 .buildYourOwn:hover::before {
   opacity: 1;
 }
 
+/* Progress Indicator */
+.progressIndicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 2rem 1rem;
+  gap: 1rem;
+  background: linear-gradient(135deg, rgba(192, 0, 0, 0.03) 0%, rgba(252, 172, 0, 0.03) 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+.progressStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  max-width: 120px;
+}
+
+.progressStepNumber {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--bg-light);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  transition: var(--transition);
+  position: relative;
+}
+
+.progressStep.completed .progressStepNumber {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--text-white);
+  transform: scale(1.1);
+}
+
+.progressStep.active .progressStepNumber {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text-white);
+  box-shadow: 0 0 20px rgba(252, 172, 0, 0.4);
+  animation: pulse 2s infinite;
+}
+
+.progressStepLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-light);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.progressStep.completed .progressStepLabel,
+.progressStep.active .progressStepLabel {
+  color: var(--text-heading);
+}
+
+.progressConnector {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  max-width: 60px;
+  transition: var(--transition);
+}
+
+.progressConnector.completed {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(252, 172, 0, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(252, 172, 0, 0.6);
+  }
+}
+
+.buildYourOwnContent {
+  padding: 2rem;
+}
+
 .buildYourOwnTitle {
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text-heading);
   margin: 0 0 0.5rem;
   text-align: center;
 }
 
 .buildYourOwnSubtitle {
   text-align: center;
-  color: #6b7280;
+  color: var(--text-light);
   margin-bottom: 2rem;
   font-size: 1rem;
   max-width: 600px;
@@ -153,24 +248,66 @@
 }
 
 .buildSection {
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background: var(--bg-light);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  position: relative;
+  transition: var(--transition);
+}
+
+.buildSection::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(252, 172, 0, 0.2), rgba(192, 0, 0, 0.2));
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.buildSection.completed::before {
+  opacity: 1;
 }
 
 .buildSection:last-child {
-  border-bottom: none;
   margin-bottom: 0;
-  padding-bottom: 0;
 }
 
 .sectionTitle {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 1rem;
+  color: var(--text-heading);
+  margin: 0 0 1.5rem;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sectionTitle::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: var(--transition);
+}
+
+.buildSection.completed .sectionTitle::before {
+  background: var(--primary);
+  box-shadow: 0 0 10px rgba(192, 0, 0, 0.3);
 }
 
 .flavorCategory {
@@ -191,17 +328,17 @@
 .flavorCategoryTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-main);
   margin: 0;
 }
 
 .premiumBadge {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: white;
+  background: linear-gradient(135deg, var(--accent), #d97706);
+  color: var(--text-white);
   font-size: 0.65rem;
   font-weight: 700;
   padding: 0.2rem 0.5rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -213,28 +350,29 @@
 }
 
 .optionButton {
-  background: #ffffff;
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  background: var(--bg-white);
+  border: 2px solid var(--border);
   border-radius: 16px;
   padding: 1rem;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-heading);
   cursor: pointer;
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
   position: relative;
   overflow: hidden;
+  transform: translateY(0);
 }
 
 .optionButton:hover {
-  background: #fafafa;
-  border-color: #c00000;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: var(--bg-light);
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(192, 0, 0, 0.15);
 }
 
 .optionButton:focus-visible {
@@ -243,19 +381,42 @@
 }
 
 .optionButton.selected {
-  background: rgba(192, 0, 0, 0.05);
-  border-color: #c00000;
-  color: #c00000;
+  background: linear-gradient(135deg, rgba(192, 0, 0, 0.08) 0%, rgba(192, 0, 0, 0.04) 100%);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(192, 0, 0, 0.2);
 }
 
-.optionButton.selected:after {
+.optionButton.selected::after {
   content: '✓';
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  color: #c00000;
+  color: var(--primary);
   font-weight: bold;
   font-size: 0.9rem;
+  background: var(--bg-white);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(192, 0, 0, 0.3);
+  animation: checkmarkPop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes checkmarkPop {
+  0% {
+    transform: scale(0) rotate(-180deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
 }
 
 .optionButton:disabled {
@@ -270,7 +431,7 @@
   height: 140px;
   object-fit: contain;
   border-radius: 12px;
-  background: #f8f8f8;
+  background: var(--bg-light);
   margin-bottom: 0.75rem;
   padding: 0.5rem;
 }
@@ -283,7 +444,7 @@
 
 .optionPrice, .flavorPrice, .additionalPrice {
   font-weight: 700;
-  color: #c00000;
+  color: var(--primary);
   font-size: 0.9rem;
 }
 
@@ -291,8 +452,8 @@
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background: linear-gradient(135deg, #fcac00, #f59e0b);
-  color: white;
+  background: linear-gradient(135deg, var(--accent), #f59e0b);
+  color: var(--text-white);
   font-size: 0.6rem;
   font-weight: 700;
   padding: 0.15rem 0.4rem;
@@ -301,15 +462,22 @@
   letter-spacing: 0.05em;
 }
 
+/* Sticky Total Price */
 .buildFooter {
   margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(192, 0, 0, 0.03) 0%, rgba(252, 172, 0, 0.03) 100%);
+  border-top: 1px solid var(--border);
   text-align: center;
+  border-radius: 0 0 24px 24px;
+  position: sticky;
+  bottom: 0;
+  backdrop-filter: blur(10px);
+  z-index: 10;
 }
 
 .mixFlavors {
-  color: #6b7280;
+  color: var(--text-light);
   font-size: 0.9rem;
   margin: 0 0 1rem;
   display: flex;
@@ -328,31 +496,52 @@
   justify-content: space-between;
   align-items: center;
   border: 1px solid rgba(192, 0, 0, 0.1);
+  transition: var(--transition);
+}
+
+.totalPrice:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(192, 0, 0, 0.15);
 }
 
 .totalLabel {
   font-size: 1rem;
   font-weight: 600;
-  color: #4a4a4a;
+  color: var(--text-main);
 }
 
 .totalAmount {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #c00000;
+  color: var(--primary);
+  transition: var(--transition);
+}
+
+.totalAmount.updating {
+  animation: priceUpdate 0.3s ease;
+}
+
+@keyframes priceUpdate {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+    color: var(--accent);
+  }
 }
 
 .addToCartButton {
-  background: linear-gradient(135deg, #fcac00 0%, #de8e00 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--accent) 0%, #de8e00 100%);
+  color: var(--text-white);
   border: none;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: 0.75rem 2rem;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .addToCartButton:hover {
@@ -412,11 +601,11 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0.5rem 1rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   margin-bottom: 1.5rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: white;
+  color: var(--text-white);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -424,7 +613,7 @@
 .heroContent h1 {
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 800;
-  color: white;
+  color: var(--text-white);
   margin-bottom: 1.25rem;
   line-height: 1.1;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -432,7 +621,7 @@
 }
 
 .heroContent h1 span {
-  color: #fcac00;
+  color: var(--accent);
   position: relative;
   display: inline-block;
 }
@@ -444,8 +633,8 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: #fcac00;
-  border-radius: 9999px;
+  background: var(--accent);
+  border-radius: var(--radius-full);
 }
 
 .heroContent p {
@@ -456,94 +645,6 @@
   line-height: 1.7;
   font-weight: 400;
 }
-.menuHero {
-  position: relative;
-  min-height: 55vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 3rem 1.5rem;
-  background: linear-gradient(135deg, 
-    rgba(192, 0, 0, 0.95) 0%, 
-    rgba(150, 0, 0, 0.9) 50%,
-    rgba(192, 0, 0, 0.85) 100%
-  ),
-  url('/assets/Brand_FryTown.png') center/cover no-repeat;
-  background-attachment: fixed;
-  overflow: hidden;
-}
-
-.menuHero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(252, 172, 0, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-  pointer-events: none;
-}
-
-.heroContent {
-  position: relative;
-  z-index: 2;
-  max-width: 900px;
-  padding: 0 1rem;
-}
-
-.heroBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  margin-bottom: 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.heroContent h1 {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-weight: 800;
-  color: white;
-  margin-bottom: 1.25rem;
-  line-height: 1.1;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  letter-spacing: -0.02em;
-}
-
-.heroContent h1 span {
-  color: #fcac00;
-  position: relative;
-  display: inline-block;
-}
-
-.heroContent h1 span::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: #fcac00;
-  border-radius: 9999px;
-}
-
-.heroContent p {
-  font-size: clamp(1.1rem, 2vw, 1.35rem);
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.7;
-  font-weight: 400;
-}
-
 
 /* Animations */
 @keyframes fadeInUp {
@@ -592,13 +693,13 @@
 
 /* Menu Item - Consistent card styling */
 .menuItem {
-  background: #ffffff;
+  background: var(--bg-white);
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-  transition: all 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
   position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -621,12 +722,12 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0;
-  transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition);
 }
 
 .menuItem:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-lg);
 }
 
 .menuItem:hover::before {
@@ -668,7 +769,7 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -678,20 +779,20 @@
 }
 
 .badge.popular {
-  background: linear-gradient(135deg, #fcac00 0%, #de8e00 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--accent) 0%, #de8e00 100%);
+  color: var(--text-white);
   box-shadow: 0 4px 12px rgba(252, 172, 0, 0.4);
 }
 
 .badge.spicy {
   background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-  color: white;
+  color: var(--text-white);
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
 }
 
 .badge.vegetarian {
   background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-  color: white;
+  color: var(--text-white);
   box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
 }
 
@@ -714,7 +815,7 @@
 .itemDetails h3 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text-heading);
   line-height: 1.3;
   flex: 1;
 }
@@ -731,7 +832,7 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--text-light);
   font-weight: 500;
 }
 
@@ -754,7 +855,7 @@
 }
 
 .itemDetails p {
-  color: #4a4a4a;
+  color: var(--text-main);
   line-height: 1.7;
   font-size: 0.95rem;
   flex: 1;
@@ -770,8 +871,8 @@
 
 .ingredientTag {
   font-size: 0.8rem;
-  color: #6b7280;
-  background: #fafafa;
+  color: var(--text-light);
+  background: var(--bg-light);
   padding: 0.25rem 0.75rem;
   border-radius: 6px;
   font-weight: 500;
@@ -784,13 +885,13 @@
   align-items: center;
   gap: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  border-top: 1px solid var(--border);
 }
 
 .price {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #c00000;
+  color: var(--primary);
   letter-spacing: -0.02em;
 }
 
@@ -798,23 +899,23 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #fcac00 0%, #de8e00 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--accent) 0%, #de8e00 100%);
+  color: var(--text-white);
   border: none;
   padding: 0.75rem 1.25rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
   white-space: nowrap;
 }
 
 .addToCart:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 20px rgba(252, 172, 0, 0.3);
-  background: linear-gradient(135deg, #de8e00 0%, #fcac00 100%);
+  background: linear-gradient(135deg, #de8e00 0%, var(--accent) 100%);
 }
 
 .addToCart:active {
@@ -924,7 +1025,53 @@
     height: 120px;
   }
   
-  .buildYourOwn {
+  .buildYourOwnContent {
+    padding: 1.5rem;
+  }
+  
+  .progressIndicator {
+    padding: 1.5rem 1.5rem 1rem;
+    gap: 0.5rem;
+  }
+  
+  .progressStep {
+    max-width: 80px;
+  }
+  
+  .progressStepNumber {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+  
+  .progressStepLabel {
+    font-size: 0.65rem;
+  }
+  
+  .progressConnector {
+    max-width: 40px;
+  }
+  
+  .buildSection {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .optionGroup {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  
+  .optionImage {
+    height: 120px;
+  }
+  
+  .buildFooter {
     padding: 1.5rem;
   }
   
@@ -994,12 +1141,59 @@
     padding: 0.2rem 0.5rem;
   }
   
+  .buildYourOwnContent {
+    padding: 1rem;
+  }
+  
+  .progressIndicator {
+    padding: 1rem 1rem 0.75rem;
+    gap: 0.25rem;
+  }
+  
+  .progressStep {
+    max-width: 70px;
+  }
+  
+  .progressStepNumber {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+  
+  .progressStepLabel {
+    font-size: 0.6rem;
+  }
+  
+  .progressConnector {
+    max-width: 30px;
+  }
+  
+  .buildSection {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+  
   .optionGroup {
     grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
   
   .optionImage {
     height: 140px;
+  }
+  
+  .buildFooter {
+    padding: 1rem;
+  }
+  
+  .totalPrice {
+    max-width: 240px;
+    padding: 0.75rem 1rem;
   }
 }
 

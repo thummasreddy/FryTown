@@ -1,13 +1,16 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { NAV_ITEMS, type NavGroup } from "./navbar.data";
 import brandLogo from "../../../assets/Brand_FryTown.png";
+import MobileMenu from "./MobileMenu";
+import Cart from "../../Cart/Cart";
+import styles from "./Navbar.module.css";
 
 // User icon component with screen reader text
 const UserIcon = ({ showText = true }: { showText?: boolean }) => (
-  <div className="user-icon-wrapper">
+  <div className={styles.userIconWrapper}>
     <svg 
-      className="user-icon" 
+      className={styles.userIcon} 
       xmlns="http://www.w3.org/2000/svg" 
       width="24" 
       height="24" 
@@ -22,7 +25,7 @@ const UserIcon = ({ showText = true }: { showText?: boolean }) => (
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
       <circle cx="12" cy="7" r="4"></circle>
     </svg>
-    {showText && <span className="visually-hidden">Account</span>}
+    {showText && <span className={styles.visuallyHidden}>Account</span>}
   </div>
 );
 
@@ -53,19 +56,19 @@ export default function Navbar() {
   };
 
   return (
-    <header className="site-header">
-      <div className="nav-shell">
+    <header className={styles.siteHeader}>
+      <div className={styles.navShell}>
         <Link 
           to="/" 
-          className="brand" 
+          className={styles.brand} 
           aria-label="Go to home"
           onClick={handleHomeClick}
         >
-          <img className="brand-logo" src={brandLogo} alt="" aria-hidden="true" />
+          <img className={styles.brandLogo} src={brandLogo} alt="" aria-hidden="true" />
         </Link>
 
         <button
-          className="hamburger"
+          className={styles.hamburger}
           type="button"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
@@ -75,16 +78,18 @@ export default function Navbar() {
           <span aria-hidden="true">☰</span>
         </button>
 
-        <nav className="nav-desktop" aria-label="Primary">
-          <ul className="nav-list">
+        <nav className={styles.navDesktop} aria-label="Primary">
+          <ul className={styles.navList}>
             {NAV_ITEMS.map((item) => (
               <DesktopNavItem key={item.label} item={item} />
             ))}
           </ul>
         </nav>
+        
+        <Cart />
       </div>
 
-      <MobileMenu open={mobileOpen} />
+      <MobileMenu isOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
     </header>
   );
 }
@@ -107,9 +112,9 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
 
   if (!hasChildren) {
     return (
-      <li className="nav-item">
+      <li className={styles.navItem}>
         <NavLink 
-          className={({ isActive }) => `link ${isActive ? 'active' : ''} ${item.label === 'Account' ? 'account-link' : ''}`} 
+          className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''} ${item.label === 'Account' ? styles.accountLink : ''}`} 
           to={item.to || '#'}
           aria-label={item.label === "Account" ? "Account" : undefined}
           end
@@ -121,10 +126,10 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
   }
 
   return (
-    <li className="nav-item" ref={wrapRef}>
+    <li className={styles.navItem} ref={wrapRef}>
       <NavLink
         to={item.to || '#'}
-        className={({ isActive }) => `link link-btn ${isActive ? 'active' : ''} ${item.label === 'Account' ? 'account-link' : ''}`}
+        className={({ isActive }) => `${styles.link} ${styles.linkBtn} ${isActive ? styles.active : ''} ${item.label === 'Account' ? styles.accountLink : ''}`}
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={(e) => {
@@ -135,22 +140,22 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
         {item.label === 'Account' ? (
           <>
             <UserIcon showText={false} />
-            <span className="dropdown-arrow" aria-hidden="true">▾</span>
+            <span className={styles.dropdownArrow} aria-hidden="true">▾</span>
           </>
         ) : (
           <>
-            {item.label} <span aria-hidden="true">▾</span>
+            {item.label} <span className={styles.dropdownArrow} aria-hidden="true">▾</span>
           </>
         )}
       </NavLink>
 
       {open && (
-        <div className="dropdown" role="menu" aria-label={`${item.label} submenu`}>
+        <div className={styles.dropdown} role="menu" aria-label={`${item.label} submenu`}>
           {item.children!.map((c) => (
             <NavLink
               key={c.to}
               to={c.to}
-              className={({ isActive }) => `dropdown-link ${isActive ? 'active' : ''}`}
+              className={({ isActive }) => `${styles.dropdownLink} ${isActive ? styles.active : ''}`}
               role="menuitem"
               onClick={() => setOpen(false)}
             >
@@ -163,59 +168,3 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
   );
 }
 
-function MobileMenu({ open }: { open: boolean }) {
-  const items = useMemo(() => NAV_ITEMS, []);
-
-  return (
-    <div id="mobile-menu" className={open ? "mobile open" : "mobile"} aria-hidden={!open}>
-      <nav aria-label="Mobile primary">
-        <ul className="mobile-list">
-          {items.map((item) => (
-            <MobileNavItem key={item.label} item={item} />
-          ))}
-        </ul>
-      </nav>
-    </div>
-  );
-}
-
-function MobileNavItem({ item }: { item: NavGroup }) {
-  const hasChildren = !!item.children?.length;
-  const [expanded, setExpanded] = useState(false);
-
-  if (!hasChildren) {
-    return (
-      <li className="mobile-item">
-        <NavLink className="mobile-link" to={item.to!}>
-          {item.label === "Account" ? <UserIcon showText={true} /> : item.label}
-        </NavLink>
-      </li>
-    );
-  }
-
-  return (
-    <li className="mobile-item">
-      <button
-        type="button"
-        className="mobile-link mobile-accordion"
-        aria-expanded={expanded}
-        onClick={() => setExpanded((v) => !v)}
-      >
-        <span>{item.label}</span>
-        <span aria-hidden="true">{expanded ? "−" : "+"}</span>
-      </button>
-
-      {expanded && (
-        <ul className="mobile-sub">
-          {item.children!.map((c) => (
-            <li key={c.to}>
-              <NavLink className="mobile-sublink" to={c.to}>
-                {c.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      )}
-    </li>
-  );
-}

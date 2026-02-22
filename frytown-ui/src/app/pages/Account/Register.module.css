@@ -3,36 +3,7 @@
    (Final: fits 100% zoom + no page scroll)
    =========================== */
 
-:root {
-  --brand-red: rgb(192, 0, 0);
-  --brand-gold: rgb(252, 172, 0);
-  --brand-red-hover: rgb(220, 30, 30);
-  --brand-gold-hover: rgb(255, 200, 50);
-  --brand-red-active: rgb(160, 0, 0);
-  --brand-gold-active: rgb(230, 160, 0);
-
-  --bg: #f6f7fb;
-  --card: rgba(255, 255, 255, 0.96);
-  --text: #0f172a;
-  --text-light: #334155;
-  --muted: rgba(15, 23, 42, 0.7);
-  --border: rgba(15, 23, 42, 0.1);
-  --focus-ring: 0 0 0 3px rgba(252, 172, 0, 0.4);
-
-  --radius-xl: 22px;
-  --radius-lg: 18px;
-  --radius-md: 14px;
-  --radius-sm: 8px;
-
-  --shadow-md: 0 20px 60px rgba(2, 6, 23, 0.1);
-  --shadow-sm: 0 10px 26px rgba(2, 6, 23, 0.06);
-  --shadow-focus: 0 0 0 4px rgba(252, 172, 0, 0.2);
-
-  --transition-base: 200ms ease;
-  --transition-transform: transform 200ms ease, box-shadow 200ms ease;
-
-  --font-sans: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
+/* Variables inherited from globals.css */
 
 /* ✅ MAIN CONTAINER (no page scroll) */
 /* Base styles */
@@ -45,12 +16,12 @@
   grid-template-columns: 1.05fr 1fr;
   background:
     radial-gradient(1100px 550px at 50% -10%, rgba(252, 172, 0, 0.12), transparent 55%),
-    linear-gradient(180deg, #fbfbfd 0%, var(--bg) 100%);
-  font-family: var(--font-sans);
+    linear-gradient(180deg, #fbfbfd 0%, var(--bg-light) 100%);
+  font-family: system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
-  color: var(--text);
+  color: var(--text-main);
 }
 
 @media (max-width: 1024px) {
@@ -195,9 +166,9 @@
 
 .registerCard {
   width: min(520px, 92%);
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.96);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -208,7 +179,7 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(15, 23, 42, 0.2) transparent;
   will-change: transform, opacity;
-  transition: var(--transition-base);
+  transition: var(--transition);
   margin-bottom: 10rem;
 }
 
@@ -228,7 +199,7 @@
 
 .registerCard:focus-visible {
   outline: none;
-  box-shadow: var(--focus-ring);
+  box-shadow: 0 0 0 3px rgba(252, 172, 0, 0.4);
 }
 
 /* Improve focus styles for all focusable elements */
@@ -238,7 +209,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: none;
-  box-shadow: var(--focus-ring);
+  box-shadow: 0 0 0 3px rgba(252, 172, 0, 0.4);
   position: relative;
   z-index: 1;
 }
@@ -254,7 +225,7 @@ textarea:focus-visible {
   font-size: 2.25rem; /* slightly smaller default to fit better */
   font-weight: 900;
   letter-spacing: -0.8px;
-  color: var(--text);
+  color: var(--text-heading);
   display: inline-block;
   position: relative;
 }
@@ -268,13 +239,13 @@ textarea:focus-visible {
   width: 78px;
   height: 5px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--brand-red), var(--brand-gold));
+  background: linear-gradient(90deg, var(--primary), var(--accent));
   box-shadow: 0 12px 26px rgba(252, 172, 0, 0.22);
 }
 
 .registerHeader p {
   margin: 0.85rem 0 0;
-  color: var(--muted);
+  color: var(--text-light);
   font-weight: 500;
 }
 
@@ -292,7 +263,7 @@ textarea:focus-visible {
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: white;
-  color: var(--text);
+  color: var(--text-main);
   font-size: 0.9rem;
   display: flex;
   align-items: center;
@@ -306,7 +277,7 @@ textarea:focus-visible {
 }
 
 .socialButton {
-  transition: var(--transition-transform);
+  transition: var(--transition);
   will-change: transform, box-shadow;
   transform: translateZ(0);
   backface-visibility: hidden;
@@ -392,13 +363,13 @@ textarea:focus-visible {
   width: 100%;
   height: 50px; /* tightened */
   border-radius: var(--radius-md);
-  border: 1px solid rgba(15, 23, 42, 0.12);
+  border: 1px solid var(--border);
   background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
   padding: 0 1rem 0 3.05rem;
 
   font-size: 0.98rem;
   font-weight: 650;
-  color: var(--text);
+  color: var(--text-main);
 
   outline: none;
   transition: border-color 160ms ease, box-shadow 160ms ease;
@@ -415,7 +386,7 @@ textarea:focus-visible {
 
 .inputField:focus {
   border-color: rgba(252, 172, 0, 0.65);
-  box-shadow: var(--ring);
+  box-shadow: 0 0 0 3px rgba(252, 172, 0, 0.4);
 }
 
 /* Password hint */
@@ -458,7 +429,7 @@ textarea:focus-visible {
   letter-spacing: 1px;
   text-transform: uppercase;
   color: #fff;
-  background: rgb(252, 172, 0);
+  background: var(--accent);
   transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
   position: relative;
   overflow: hidden;
@@ -476,7 +447,7 @@ textarea:focus-visible {
 .submitButton:hover {
   transform: translateY(-2px);
   filter: saturate(1.06);
-  background: rgb(192, 0, 0);
+  background: var(--primary);
 }
 
 .submitButton:hover::after {
@@ -504,7 +475,7 @@ textarea:focus-visible {
 }
 
 .loginLink a {
-  color: var(--brand-red);
+  color: var(--primary);
   text-decoration: none;
   font-weight: 800;
 }

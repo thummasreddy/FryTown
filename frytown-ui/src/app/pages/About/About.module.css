@@ -1,27 +1,5 @@
 /* ===== Typography ===== */
-:root {
-  --font-heading: system-ui, -apple-system, sans-serif;
-  --font-body: system-ui, -apple-system, sans-serif;
-  
-  /* Colors */
-  --primary: rgb(192, 0, 0);
-  --primary-hover: rgb(150, 0, 0);
-  --accent: rgb(252, 172, 0);
-  --accent-hover: rgb(222, 142, 0);
-  --text: #333333;
-  --text-light: #666666;
-  --light-bg: #f8f8f8;
-  --white: #ffffff;
-  --black: #000000;
-  
-  /* Shadows */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
-  
-  /* Transitions */
-  --transition: all 0.3s ease;
-}
+/* Variables inherited from globals.css */
 
 /* ===== Hero Section ===== */
 .hero {
@@ -33,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--white);
+  color: var(--text-white);
   text-align: center;
   background-size: cover;
   background-position: center;
@@ -57,7 +35,7 @@
 .heroContent {
   position: relative;
   z-index: 2;
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 2rem;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -69,7 +47,7 @@
   margin-bottom: 1.5rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   line-height: 1.2;
-  color: var(--white);
+  color: var(--text-white);
   text-transform: uppercase;
   animation: fadeInUp 0.8s ease-out;
   position: relative;
@@ -82,7 +60,7 @@
   max-width: 800px;
   margin: 0 auto 2.5rem;
   line-height: 1.6;
-  color: var(--white);
+  color: var(--text-white);
   opacity: 0.9;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -96,16 +74,16 @@
   padding: 6rem 2rem;
   position: relative;
   overflow: hidden;
-  background-color: var(--white);
+  background-color: var(--bg-white);
 }
 
 .section.light {
-  background-color: var(--light-bg);
+  background-color: var(--bg-light);
 }
 
 .section.dark {
-  background-color: var(--black);
-  color: var(--white);
+  background-color: var(--text-heading);
+  color: var(--text-white);
 }
 
 .section-title {
@@ -117,7 +95,7 @@
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
-  color: var(--black);
+  color: var(--text-heading);
 }
 
 .section-title p {
@@ -130,7 +108,7 @@
 
 .dark .section-title h2,
 .dark .section-title p {
-  color: var(--white);
+  color: var(--text-white);
 }
 
 .sectionHeader {
@@ -146,7 +124,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #c00000;
+  color: var(--primary);
   margin-bottom: 1rem;
   position: relative;
   padding-bottom: 0.5rem;
@@ -160,14 +138,14 @@
   transform: translateX(-50%);
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, #000000, #c00000);
+  background: linear-gradient(90deg, var(--text-heading), var(--primary));
 }
 
 .sectionTitle {
   font-size: 3rem;
   font-weight: 800;
   line-height: 1.2;
-  color: #000000;
+  color: var(--text-heading);
   text-align: center;
   margin: 0.5rem 0 1.5rem;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
@@ -182,7 +160,7 @@
 
 .sectionSubtitle {
   font-size: 1.25rem;
-  color: #333333;
+  color: var(--text-main);
   max-width: 800px;
   margin: 0 auto 3rem;
   line-height: 1.8;
@@ -195,18 +173,18 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2.5rem;
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 1rem;
 }
 
 .featureCard {
-  background: white;
+  background: var(--bg-white);
   border-radius: 1.5rem;
   padding: 3rem 2.5rem;
   text-align: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   background: white;
   position: relative;
@@ -221,7 +199,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #000000, #c00000);
+  background: linear-gradient(90deg, var(--text-heading), var(--primary));
   z-index: 2;
 }
 
@@ -240,8 +218,8 @@
   justify-content: center;
   background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-  border: 3px solid #f8f8f8;
-  transition: all 0.3s ease;
+  border: 3px solid var(--bg-light);
+  transition: var(--transition);
 }
 
 .featureCard:hover .iconWrapper {
@@ -251,14 +229,14 @@
 
 .icon {
   font-size: 2.5rem;
-  color: #c00000;
-  transition: all 0.3s ease;
+  color: var(--primary);
+  transition: var(--transition);
 }
 
 .featureTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #000000;
+  color: var(--text-heading);
   margin-bottom: 1rem;
   position: relative;
   display: inline-block;
@@ -273,17 +251,17 @@
   transform: translateX(-50%);
   width: 40px;
   height: 2px;
-  background: #ecc94b;
-  transition: all 0.3s ease;
+  background: var(--accent);
+  transition: var(--transition);
 }
 
 .featureCard:hover .featureTitle:after {
   width: 60px;
-  background: #d69e2e;
+  background: var(--accent-hover);
 }
 
 .featureDescription {
-  color: #333333;
+  color: var(--text-main);
   line-height: 1.8;
   font-size: 1.05rem;
   margin: 0;
@@ -306,7 +284,7 @@
   left: 0;
   right: 0;
   height: 10px;
-  background: linear-gradient(90deg, #000000, #c00000);
+  background: linear-gradient(90deg, var(--text-heading), var(--primary));
   z-index: 1;
 }
 
@@ -320,12 +298,12 @@
 }
 
 .testimonialCard {
-  background: white;
+  background: var(--bg-white);
   border-radius: 1.25rem;
   padding: 3rem 2.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 1;
   overflow: hidden;
@@ -338,7 +316,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #000000, #c00000);
+  background: linear-gradient(90deg, var(--text-heading), var(--primary));
   z-index: 2;
 }
 
@@ -352,14 +330,14 @@
 }
 
 .stars svg {
-  color: #c00000;
+  color: var(--primary);
   font-size: 1.25rem;
   margin: 0 1px;
 }
 
 .testimonialText {
   font-size: 1.1rem;
-  color: #333333;
+  color: var(--text-main);
   line-height: 1.8;
   margin-bottom: 2rem;
   font-style: italic;
@@ -400,23 +378,23 @@ testimonials .testimonialText:before,
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--bg-white);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  color: #ff0000;
+  color: var(--primary);
   margin-right: 1.25rem;
   flex-shrink: 0;
-  border: 2px solid #f0e6d2;
+  border: 2px solid rgba(240, 230, 210, 1);
   font-size: 1.5rem;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .testimonialCard:hover .authorAvatar {
   transform: scale(1.05);
   background: #fff8e6;
-  border-color: #f0e6d2;
+  border-color: var(--accent);
 }
 
 .authorInfo {
@@ -425,7 +403,7 @@ testimonials .testimonialText:before,
 
 .authorName {
   font-weight: 700;
-  color: #000000;
+  color: var(--text-heading);
   margin-bottom: 0.25rem;
   font-size: 1.1rem;
 }
@@ -441,8 +419,8 @@ testimonials .testimonialText:before,
   position: relative;
   overflow: hidden;
   padding: 8rem 2rem;
-  background: linear-gradient(135deg, #000000 0%, #c00000 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--text-heading) 0%, var(--primary) 100%);
+  color: var(--text-white);
   text-align: center;
   z-index: 1;
 }
@@ -468,16 +446,16 @@ testimonials .testimonialText:before,
 }
 
 .ctaTitle {
-  font-family: var(--font-heading);
-  font-size: var(--text-5xl);
-  font-weight: var(--font-extrabold);
-  line-height: var(--leading-tight);
-  color: white;
+  font-family: system-ui, sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-white);
   margin: 0 0 1.5rem;
 }
 
 .ctaTitle .highlight {
-  color: white;
+  color: var(--text-white);
   position: relative;
   display: inline-block;
 }
@@ -521,7 +499,7 @@ testimonials .testimonialText:before,
   font-weight: 600;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   text-transform: uppercase;
   letter-spacing: 1px;
   text-decoration: none;
@@ -532,20 +510,20 @@ testimonials .testimonialText:before,
 }
 
 .primaryButton {
-  background-color: rgb(252, 172, 0);
-  color: white;
+  background-color: var(--accent);
+  color: var(--text-white);
 }
 
 .primaryButton:hover {
-  background-color: rgb(192, 0, 0);
+  background-color: var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .secondaryButton {
   background-color: transparent;
-  color: white;
-  border: 2px solid white;
+  color: var(--text-white);
+  border: 2px solid var(--text-white);
 }
 
 .secondaryButton:hover {
@@ -576,20 +554,20 @@ testimonials .testimonialText:before,
 }
 
 .btn-primary {
-  background-color: rgb(252, 172, 0);
-  color: white;
+  background-color: var(--accent);
+  color: var(--text-white);
 }
 
 .btn-primary:hover {
-  background-color: rgb(192, 0, 0);
+  background-color: var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .btn-secondary {
   background-color: transparent;
-  color: white;
-  border: 2px solid white;
+  color: var(--text-white);
+  border: 2px solid var(--text-white);
 }
 
 .btn-secondary:hover {
@@ -620,15 +598,15 @@ testimonials .testimonialText:before,
 .primaryButton {
   display: inline-flex;
   align-items: center;
-  background-color: rgb(252, 172, 0);
-  color: white;
+  background-color: var(--accent);
+  color: var(--text-white);
   border: none;
   padding: 1rem 2.5rem;
   font-size: 1.1rem;
   font-weight: 600;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   text-transform: uppercase;
   letter-spacing: 1px;
   text-decoration: none;
@@ -683,11 +661,6 @@ testimonials .testimonialText:before,
 
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
-  :root {
-    --text-6xl: 3.5rem;
-    --text-5xl: 2.8rem;
-  }
-  
   .featureGrid,
   .testimonialGrid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -710,12 +683,6 @@ testimonials .testimonialText:before,
 }
 
 @media (max-width: 768px) {
-  :root {
-    --text-6xl: 2.8rem;
-    --text-5xl: 2.4rem;
-    --text-4xl: 2rem;
-  }
-  
   .heroTitle,
   .sectionTitle,
   .ctaTitle,
@@ -831,7 +798,7 @@ testimonials .testimonialText:before,
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #d69e2e;
+  color: var(--accent-hover);
   margin-bottom: 1.5rem;
   position: relative;
   padding-left: 1.5rem;
@@ -845,16 +812,16 @@ testimonials .testimonialText:before,
   transform: translateY(-50%);
   width: 8px;
   height: 8px;
-  background: #d69e2e;
+  background: var(--accent-hover);
   border-radius: 50%;
 }
 
 .historyTitle {
-  font-family: var(--font-heading);
-  font-size: var(--text-5xl);
-  font-weight: var(--font-extrabold);
-  line-height: var(--leading-tight);
-  color: #000000;
+  font-family: system-ui, sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-heading);
   margin-bottom: 1.5rem;
 }
 
@@ -872,7 +839,7 @@ testimonials .testimonialText:before,
 .historyDescription {
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #333333;
+  color: var(--text-main);
   margin-bottom: 1.5rem;
   opacity: 0.95;
 }
@@ -880,15 +847,15 @@ testimonials .testimonialText:before,
 .menuButton {
   display: inline-flex;
   align-items: center;
-  background: linear-gradient(90deg, #000000, #c00000);
-  color: white;
+  background: linear-gradient(90deg, var(--text-heading), var(--primary));
+  color: var(--text-white);
   border: none;
   padding: 1rem 2rem;
   border-radius: 50px;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   margin-top: 1rem;
   box-shadow: 0 4px 15px rgba(214, 158, 46, 0.3);
 }

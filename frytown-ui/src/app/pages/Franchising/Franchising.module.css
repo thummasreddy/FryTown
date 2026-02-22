@@ -1,5 +1,5 @@
 .franchising-page {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 1rem 2rem;
 }
@@ -9,11 +9,11 @@
     url('https://images.unsplash.com/photo-1600891964098-9b5a63aae0c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
   background-size: cover;
   background-position: center;
-  color: white;
+  color: var(--text-white);
   text-align: center;
   padding: 6rem 2rem;
   margin-bottom: 2rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 .hero h1 {
@@ -39,34 +39,34 @@
 
 .tab-button {
   padding: 0.75rem 1.5rem;
-  border: 2px solid #ff6b35;
-  border-radius: 4px;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
   background: transparent;
-  color: #ff6b35;
+  color: var(--accent);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .tab-button:hover {
-  background-color: rgba(255, 107, 53, 0.1);
+  background-color: rgba(252, 172, 0, 0.1);
 }
 
 .tab-button.active {
-  background-color: #ff6b35;
-  color: white;
+  background-color: var(--accent);
+  color: var(--text-white);
 }
 
 .tab-content {
-  background: white;
-  border-radius: 8px;
+  background: var(--bg-white);
+  border-radius: var(--radius-md);
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .franchise-section h2 {
-  color: #2d3748;
+  color: var(--text-heading);
   margin-bottom: 2rem;
   text-align: center;
   font-size: 2rem;
@@ -81,25 +81,25 @@
 }
 
 .benefit-card {
-  background: #f8f9fa;
-  border-radius: 8px;
+  background: var(--bg-light);
+  border-radius: var(--radius-sm);
   padding: 1.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .benefit-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .benefit-card h3 {
-  color: #2d3748;
+  color: var(--text-heading);
   margin-bottom: 1rem;
   font-size: 1.25rem;
 }
 
 .benefit-card p {
-  color: #4a5568;
+  color: var(--text-main);
   line-height: 1.6;
 }
 
@@ -112,14 +112,14 @@
 }
 
 .investment-card {
-  background: #f8f9fa;
-  border-radius: 8px;
+  background: var(--bg-light);
+  border-radius: var(--radius-sm);
   padding: 1.5rem;
   text-align: center;
 }
 
 .investment-card h3 {
-  color: #2d3748;
+  color: var(--text-heading);
   margin-bottom: 1rem;
   font-size: 1.25rem;
 }
@@ -127,12 +127,12 @@
 .investment-card .price {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ff6b35;
+  color: var(--accent);
   margin: 0.5rem 0;
 }
 
 .investment-card p {
-  color: #4a5568;
+  color: var(--text-main);
   line-height: 1.6;
   margin: 0.5rem 0;
 }
@@ -146,7 +146,7 @@
 .application-form > p {
   text-align: center;
   margin-bottom: 2rem;
-  color: #4a5568;
+  color: var(--text-main);
 }
 
 .franchise-form {
@@ -162,7 +162,7 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #2d3748;
+  color: var(--text-heading);
   font-weight: 500;
 }
 
@@ -170,8 +170,8 @@
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
@@ -179,8 +179,8 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #ff6b35;
-  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(252, 172, 0, 0.2);
 }
 
 .form-group textarea {
@@ -190,10 +190,10 @@
 
 .submit-btn {
   grid-column: 1 / -1;
-  background-color: #ff6b35;
-  color: white;
+  background-color: var(--accent);
+  color: var(--text-white);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 1rem 2rem;
   font-size: 1rem;
   font-weight: 600;
@@ -203,7 +203,7 @@
 }
 
 .submit-btn:hover {
-  background-color: #e65a2b;
+  background-color: var(--accent-hover);
 }
 
 /* Responsive adjustments */
