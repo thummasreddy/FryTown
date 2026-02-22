@@ -224,7 +224,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
       image: item.image,
       type: 'regular' as const,
     };
-
+    
     addItem(cartItem);
   };
 

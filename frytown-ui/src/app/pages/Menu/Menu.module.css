@@ -130,6 +130,7 @@
   mask-composite: exclude;
   opacity: 0;
   transition: var(--transition);
+  pointer-events: none;
 }
 
 .buildYourOwn:hover::before {
@@ -274,6 +275,7 @@
   mask-composite: exclude;
   opacity: 0;
   transition: var(--transition);
+  pointer-events: none;
 }
 
 .buildSection.completed::before {
@@ -723,6 +725,7 @@
   mask-composite: exclude;
   opacity: 0;
   transition: var(--transition);
+  pointer-events: none;
 }
 
 .menuItem:hover {
