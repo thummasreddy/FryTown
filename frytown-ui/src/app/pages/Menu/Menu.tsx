@@ -20,6 +20,14 @@ import FryTownSweetPotatoFries from '../../assets/FryTown_Sweet_Potato_Fries.png
 import FryTownTaterTots from '../../assets/FryTown_Tater_tots.png';
 import FryTownWaffleFries from '../../assets/FryTown_Waffle_Fries.png';
 
+// Import dip images
+import CheeseDip from '../../assets/Cheese Dip.png';
+import GarlicMayo from '../../assets/Garlic Mayo.png';
+import MintChutney from '../../assets/Mint Chutney.png';
+import SweetChili from '../../assets/Sweet Chili.png';
+import BBQSauce from '../../assets/BBQ Sauce.png';
+import SrirachaMayo from '../../assets/Sriracha Mayo.png';
+
 type MenuTab = 'classic' | 'build-your-fries' | 'specialty' | 'dips' | 'beverages';
 
 type Size = {
@@ -382,7 +390,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
       name: 'Cheese Dip',
       description: 'Creamy, melted cheese sauce with a hint of garlic',
       price: '₹25',
-      image: OriginalFries,
+      image: CheeseDip,
       vegetarian: true
     },
     {
@@ -390,7 +398,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
       name: 'Garlic Mayo',
       description: 'Creamy mayonnaise with roasted garlic and herbs',
       price: '₹20',
-      image: CrispyKrinkle,
+      image: GarlicMayo,
       vegetarian: true
     },
     {
@@ -398,7 +406,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
       name: 'Mint Chutney',
       description: 'Fresh mint and coriander chutney with a touch of spice',
       price: '₹15',
-      image: CurlyFries,
+      image: MintChutney,
       vegetarian: true,
       popular: true
     },
@@ -407,7 +415,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
       name: 'Sweet Chili',
       description: 'Sweet and spicy chili sauce with a tangy finish',
       price: '₹20',
-      image: WaffleFries,
+      image: SweetChili,
       vegetarian: true
     },
     {
@@ -415,7 +423,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
       name: 'BBQ Sauce',
       description: 'Smoky and sweet barbecue sauce',
       price: '₹20',
-      image: TaterTots,
+      image: BBQSauce,
       vegetarian: true
     },
     {
@@ -423,7 +431,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
       name: 'Sriracha Mayo',
       description: 'Creamy mayo with a spicy sriracha kick',
       price: '₹25',
-      image: OriginalFries,
+      image: SrirachaMayo,
       spicy: true,
       vegetarian: true
     },
