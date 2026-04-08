@@ -430,12 +430,16 @@
 
 .optionImage {
   width: 100%;
-  height: 140px;
+  height: 160px;
   object-fit: contain;
   border-radius: 12px;
   background: var(--bg-light);
   margin-bottom: 0.75rem;
   padding: 0.5rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .optionName {
@@ -740,20 +744,25 @@
 /* Item Image */
 .itemImage {
   position: relative;
-  height: 240px;
+  height: 280px;
   overflow: hidden;
   background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .itemImage img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .menuItem:hover .itemImage img {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
 /* Badges */
@@ -938,7 +947,7 @@
   }
   
   .itemImage {
-    height: 220px;
+    height: 260px;
   }
 }
 
@@ -1000,7 +1009,7 @@
   }
   
   .itemImage {
-    height: 200px;
+    height: 240px;
   }
   
   .itemDetails {
@@ -1102,7 +1111,7 @@
   }
   
   .itemImage {
-    height: 180px;
+    height: 220px;
   }
   
   .itemDetails {

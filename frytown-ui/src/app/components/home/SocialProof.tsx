@@ -1,47 +1,43 @@
-import { FaInstagram, FaHeart } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { FaHeart } from 'react-icons/fa';
+import classicFries from '../../assets/FryTown_Classic_Fries.png';
+import curlyFries from '../../assets/FryTown_Curly_Fries.png';
+import waffleFries from '../../assets/FryTown_Waffle_Fries.png';
+import wedges from '../../assets/FryTown_Potato_Wedges.png';
+import taterTots from '../../assets/FryTown_Tater_tots.png';
+import sweetPotato from '../../assets/FryTown_Sweet_Potato_Fries.png';
 import styles from './SocialProof.module.css';
 
 export function SocialProof() {
   const posts = [
-    { id: 1, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd', alt: 'Delicious burger', likes: '1.2k' },
-    { id: 2, image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38', alt: 'Happy customer', likes: '856' },
-    { id: 3, image: 'https://images.unsplash.com/photo-1485921325833-c519f76c4927', alt: 'Tasty fries', likes: '2.3k' },
-    { id: 4, image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591', alt: 'Pizza time', likes: '1.8k' },
-    { id: 5, image: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc', alt: 'Family dinner', likes: '1.5k' },
-    { id: 6, image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1', alt: 'BBQ special', likes: '2.1k' },
+    { id: 1, image: classicFries, alt: 'Classic fries', likes: 'Top pick' },
+    { id: 2, image: curlyFries, alt: 'Curly fries', likes: 'Most shared' },
+    { id: 3, image: waffleFries, alt: 'Waffle fries', likes: 'Combo ready' },
+    { id: 4, image: wedges, alt: 'Potato wedges', likes: 'New look' },
+    { id: 5, image: taterTots, alt: 'Tater tots', likes: 'Snack hit' },
+    { id: 6, image: sweetPotato, alt: 'Sweet potato fries', likes: 'Seasonal' },
   ];
 
   return (
     <section className={styles.section}>
       <div className={styles.container}>
         <header className={styles.header}>
-          <span className={styles.subtitle}>Community Love</span>
+          <span className={styles.subtitle}>Guest Signals</span>
           <h2 className={styles.title}>#FlavorTheMoment</h2>
           <p className={styles.description}>
-            Join our community of food lovers! Share your FryTown moments with us and get featured.
+            This section now reinforces the actual FryTown offer instead of showing unrelated food imagery.
           </p>
-          
-          <a 
-            href="https://instagram.com/explore/tags/flavorthemoment" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className={styles.instagramButton}
-          >
-            <FaInstagram className={styles.instagramIcon} />
-            Follow @FryTownEats
-          </a>
+
+          <Link to="/promotions/offers" className={styles.instagramButton}>
+            See launch offers
+          </Link>
         </header>
-        
+
         <div className={styles.grid}>
           {posts.map((post) => (
             <article key={post.id} className={styles.gridItem}>
               <div className={styles.imageContainer}>
-                <img 
-                  src={post.image} 
-                  alt={post.alt}
-                  className={styles.image}
-                  loading="lazy"
-                />
+                <img src={post.image} alt={post.alt} className={styles.image} loading="lazy" />
                 <div className={styles.overlay}>
                   <div className={styles.likeCount}>
                     <div className={styles.likeBadge}>
@@ -51,7 +47,7 @@ export function SocialProof() {
                   </div>
                   <div className={styles.imageInfo}>
                     <p className={styles.imageTitle}>{post.alt}</p>
-                    <p className={styles.imageAuthor}>by @foodlover{post.id}</p>
+                    <p className={styles.imageAuthor}>FryTown favorite {post.id}</p>
                   </div>
                 </div>
               </div>
@@ -60,8 +56,8 @@ export function SocialProof() {
         </div>
 
         <footer className={styles.footer}>
-          <p>Join thousands of foodies sharing their #FlavorTheMoment</p>
-          <p>Tag us <span className={styles.footerHighlight}>@FryTownEats</span> for a chance to be featured!</p>
+          <p>Use this area later for live reviews, social proof, or delivery-platform ratings.</p>
+          <p>For now it acts as branded proof instead of misleading placeholder content.</p>
         </footer>
       </div>
     </section>

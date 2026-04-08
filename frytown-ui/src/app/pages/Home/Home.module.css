@@ -358,6 +358,10 @@
   position: relative;
 }
 
+.altSection {
+  background-color: #f9fafb;
+}
+
 .ctaContent {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -423,6 +427,24 @@
 .ctaImageContainer:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.mediaCard {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at top right, rgba(252, 172, 0, 0.18), transparent 28%),
+    linear-gradient(135deg, #fff7eb 0%, #ffffff 100%);
+}
+
+.mediaImage,
+.mediaLogo {
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain;
 }
 
 /* Responsive Design */

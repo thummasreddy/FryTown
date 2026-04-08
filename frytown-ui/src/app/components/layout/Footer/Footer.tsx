@@ -1,42 +1,39 @@
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faTwitter, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import styles from './Footer.module.css';
 import logo from '../../../assets/Brand_FryTown.png';
 
-const socialLinks = [
-  { name: 'Facebook', icon: 'facebook', url: '#' },
-  { name: 'Twitter', icon: 'twitter', url: '#' },
-  { name: 'Instagram', icon: 'instagram', url: '#' },
-  { name: 'Youtube', icon: 'youtube', url: '#' },
+const actionLinks = [
+  { name: 'Order Menu', to: '/menu/classic' },
+  { name: 'Build Your Fries', to: '/menu/build-your-fries' },
+  { name: 'Launch Offers', to: '/promotions/offers' },
 ];
 
 const footerLinks = [
   {
     title: 'Menu',
     links: [
-      { name: 'Burgers', to: '/menu/burgers' },
-      { name: 'Sides', to: '/menu/sides' },
+      { name: 'Classic Fries', to: '/menu/classic' },
+      { name: 'Specialty Fries', to: '/menu/specialty' },
       { name: 'Drinks', to: '/menu/drinks' },
-      { name: 'Desserts', to: '/menu/desserts' },
+      { name: 'Dips', to: '/menu/dips' },
     ],
   },
   {
-    title: 'Company',
+    title: 'Brand',
     links: [
       { name: 'About Us', to: '/about' },
-      { name: 'Careers', to: '/careers' },
-      { name: 'Contact', to: '/contact' },
-      { name: 'Locations', to: '/locations' },
+      { name: 'Promotions', to: '/promotions/combos' },
+      { name: 'Franchising', to: '/franchising/why' },
+      { name: 'Account', to: '/account/register' },
     ],
   },
   {
-    title: 'Support',
+    title: 'Launch Notes',
     links: [
-      { name: 'FAQs', to: '/faq' },
-      { name: 'Privacy Policy', to: '/privacy' },
-      { name: 'Terms of Service', to: '/terms' },
-      { name: 'Accessibility', to: '/accessibility' },
+      { name: 'Menu Structure', to: '/menu/classic' },
+      { name: 'Offer Design', to: '/promotions/offers' },
+      { name: 'Franchise Inquiry', to: '/franchising/apply' },
+      { name: 'Register Interest', to: '/account/register' },
     ],
   },
 ];
@@ -47,34 +44,16 @@ export default function Footer() {
       <div className={styles.footerContainer}>
         <div className={styles.logoSection}>
           <Link to="/" className={styles.logo} aria-label="FryTown Home">
-            <img 
-              src={logo} 
-              alt="FryTown Logo"
-              className={styles.logoImage}
-            />
+            <img src={logo} alt="FryTown Logo" className={styles.logoImage} />
           </Link>
           <p className={styles.slogan}>
-            Serving up crispy, delicious meals since 2023. Join us for an unforgettable flavor experience!
+            A fries-first brand with clearer navigation, stronger positioning, and a more launch-ready presentation.
           </p>
           <div className={styles.socialIcons}>
-            {socialLinks.map((social) => (
-              <a
-                key={social.name}
-                href={social.url}
-                aria-label={`Follow us on ${social.name}`}
-                className={styles.socialLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FontAwesomeIcon 
-                  icon={
-                    social.icon === 'facebook' ? faFacebook :
-                    social.icon === 'twitter' ? faTwitter :
-                    social.icon === 'instagram' ? faInstagram :
-                    faYoutube
-                  } 
-                />
-              </a>
+            {actionLinks.map((link) => (
+              <Link key={link.name} to={link.to} className={styles.socialLink}>
+                {link.name}
+              </Link>
             ))}
           </div>
         </div>
@@ -85,9 +64,7 @@ export default function Footer() {
             <ul className={styles.linksList}>
               {section.links.map((link) => (
                 <li key={link.name}>
-                  <Link to={link.to}>
-                    {link.name}
-                  </Link>
+                  <Link to={link.to}>{link.name}</Link>
                 </li>
               ))}
             </ul>
@@ -96,7 +73,7 @@ export default function Footer() {
       </div>
 
       <div className={styles.copyright}>
-        <p>© {new Date().getFullYear()} FryTown. All rights reserved.</p>
+        <p>Copyright {new Date().getFullYear()} FryTown. All rights reserved.</p>
       </div>
     </footer>
   );

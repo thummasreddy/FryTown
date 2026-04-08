@@ -1,15 +1,18 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  FaUser, FaEnvelope, FaLock, FaPhone,
-  FaArrowRight, FaGoogle, FaFacebook, FaCheckCircle
+  FaUser,
+  FaEnvelope,
+  FaLock,
+  FaPhone,
+  FaArrowRight,
+  FaGoogle,
+  FaFacebook,
+  FaCheckCircle,
 } from 'react-icons/fa';
 import styles from './Register.module.css';
 
 export default function Register() {
-  // ✅ Disable page scroll ONLY on this page
   useEffect(() => {
     document.documentElement.classList.add('noScroll');
     document.body.classList.add('noScroll');
@@ -25,68 +28,73 @@ export default function Register() {
     email: '',
     phone: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const nextErrors: Record<string, string> = {};
 
-    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
-    else if (formData.fullName.length < 3) newErrors.fullName = 'Name must be at least 3 characters';
+    if (!formData.fullName.trim()) nextErrors.fullName = 'Full name is required';
+    else if (formData.fullName.length < 3) nextErrors.fullName = 'Name must be at least 3 characters';
 
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Please enter a valid email address';
+    if (!formData.email) nextErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) nextErrors.email = 'Please enter a valid email address';
 
-    if (!formData.phone) newErrors.phone = 'Phone number is required';
-    else if (!/^\+?[0-9\s-]{10,20}$/.test(formData.phone)) newErrors.phone = 'Please enter a valid phone number';
+    if (!formData.phone) nextErrors.phone = 'Phone number is required';
+    else if (!/^\+?[0-9\s-]{10,20}$/.test(formData.phone)) nextErrors.phone = 'Please enter a valid phone number';
 
-    if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+    if (!formData.password) nextErrors.password = 'Password is required';
+    else if (formData.password.length < 8) nextErrors.password = 'Password must be at least 8 characters';
 
-    if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirm your password';
-    else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    if (!formData.confirmPassword) nextErrors.confirmPassword = 'Confirm your password';
+    else if (formData.password !== formData.confirmPassword) nextErrors.confirmPassword = 'Passwords do not match';
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+    setSubmitMessage('');
+
     try {
       console.log('Registration data:', formData);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      alert('Registration successful! Please check your email to verify your account.');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setSubmitMessage('Registration request captured. Connect this form to your auth backend before launch.');
     } catch (error) {
       console.error('Registration failed:', error);
-      alert('Registration failed. Please try again.');
+      setSubmitMessage('Registration failed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const isSuccess = submitMessage.startsWith('Registration request');
+
   return (
     <main className={styles.registerContainer}>
       <section className={styles.leftSection} aria-hidden="true">
         <div className={styles.heroInner}>
-          <h2 className={styles.heroTitle}>Join the FryTown 🍟</h2>
+          <h2 className={styles.heroTitle}>Join FryTown</h2>
           <p className={styles.heroSubtitle}>
             Create an account to unlock member-only deals, faster checkout, and exclusive promotions.
           </p>
 
           <ul className={styles.heroList}>
-            <li><FaCheckCircle /> Exclusive offers & coupon drops</li>
-            <li><FaCheckCircle /> Save addresses & reorder in 1 click</li>
+            <li><FaCheckCircle /> Exclusive offers and coupon drops</li>
+            <li><FaCheckCircle /> Save addresses and reorder faster</li>
             <li><FaCheckCircle /> Earn points and redeem rewards</li>
           </ul>
 
@@ -112,6 +120,12 @@ export default function Register() {
           <div className={styles.divider}><span>or</span></div>
 
           <form onSubmit={handleSubmit} className={styles.registerForm}>
+            {submitMessage && (
+              <div className={`${styles.statusBox} ${isSuccess ? styles.successBox : styles.errorBox}`}>
+                {submitMessage}
+              </div>
+            )}
+
             <div className={styles.formGroup}>
               <div className={styles.inputContainer}>
                 <FaUser className={styles.inputIcon} />
@@ -170,9 +184,7 @@ export default function Register() {
                 />
               </div>
               {errors.password && <span className={styles.errorText}>{errors.password}</span>}
-              <div className={styles.passwordHint}>
-                Use 8+ characters, include at least 1 number
-              </div>
+              <div className={styles.passwordHint}>Use 8+ characters, include at least 1 number</div>
             </div>
 
             <div className={styles.formGroup}>

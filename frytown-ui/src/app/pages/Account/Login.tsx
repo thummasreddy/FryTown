@@ -1,6 +1,3 @@
-
-'use client';
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaArrowRight, FaGoogle, FaFacebook, FaCheckCircle } from 'react-icons/fa';
@@ -10,48 +7,46 @@ export default function Login() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false
+    rememberMe: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = event.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const nextErrors: Record<string, string> = {};
 
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Please enter a valid email address';
+    if (!formData.email) nextErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) nextErrors.email = 'Please enter a valid email address';
 
-    if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    if (!formData.password) nextErrors.password = 'Password is required';
+    else if (formData.password.length < 6) nextErrors.password = 'Password must be at least 6 characters';
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (!validateForm()) return;
 
     setIsSubmitting(true);
     try {
       console.log('Login data:', formData);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // Redirect to dashboard or home after successful login
-      // router.push('/dashboard');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (error) {
       console.error('Login failed:', error);
       setErrors({
         ...errors,
-        submit: 'Invalid email or password. Please try again.'
+        submit: 'Invalid email or password. Please try again.',
       });
     } finally {
       setIsSubmitting(false);
@@ -62,13 +57,13 @@ export default function Login() {
     <main className={styles.registerContainer}>
       <section className={styles.leftSection} aria-hidden="true">
         <div className={styles.heroInner}>
-          <h2 className={styles.heroTitle}>Welcome Back! 🍟</h2>
+          <h2 className={styles.heroTitle}>Welcome Back</h2>
           <p className={styles.heroSubtitle}>
             Sign in to access your account, track orders, and enjoy exclusive member benefits.
           </p>
 
           <ul className={styles.heroList}>
-            <li><FaCheckCircle /> Track your orders in real-time</li>
+            <li><FaCheckCircle /> Track your orders in real time</li>
             <li><FaCheckCircle /> Save your favorite menu items</li>
             <li><FaCheckCircle /> Get personalized offers and rewards</li>
           </ul>
@@ -95,11 +90,7 @@ export default function Login() {
           <div className={styles.divider}><span>or</span></div>
 
           <form onSubmit={handleSubmit} className={styles.registerForm}>
-            {errors.submit && (
-              <div className={styles.errorBox}>
-                {errors.submit}
-              </div>
-            )}
+            {errors.submit && <div className={styles.errorBox}>{errors.submit}</div>}
 
             <div className={styles.formGroup}>
               <div className={styles.inputContainer}>

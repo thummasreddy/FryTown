@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { FaTimes } from 'react-icons/fa';
 import { NAV_ITEMS } from './navbar.data';
 import styles from './MobileMenu.module.css';
 
@@ -12,17 +13,17 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
   return (
     <div className={styles['mobile-menu-overlay']} onClick={onClose}>
-      <div className={styles['mobile-menu']} onClick={(e) => e.stopPropagation()}>
-        <button className={styles['close-button']} onClick={onClose}>
-          ×
+      <div className={styles['mobile-menu']} onClick={(event) => event.stopPropagation()}>
+        <button className={styles['close-button']} onClick={onClose} type="button" aria-label="Close menu">
+          <FaTimes aria-hidden="true" />
         </button>
-        <nav className={styles['mobile-nav']}>
+        <nav className={styles['mobile-nav']} id="mobile-menu">
           {NAV_ITEMS.map((item) => (
             <div key={item.label} className={styles['nav-group']}>
               {item.to ? (
                 <NavLink
                   to={item.to}
-                  className={({ isActive }) => 
+                  className={({ isActive }) =>
                     `${styles['nav-link']} ${styles['main-link']} ${isActive ? styles.active : ''}`
                   }
                   onClick={onClose}
@@ -37,8 +38,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   {item.children.map((child) => (
                     <NavLink
                       key={child.to}
-                      to={child.to!}
-                      className={({ isActive }) => 
+                      to={child.to}
+                      className={({ isActive }) =>
                         `${styles['nav-link']} ${styles['sub-link']} ${isActive ? styles.active : ''}`
                       }
                       onClick={onClose}

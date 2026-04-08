@@ -41,11 +41,15 @@
   border: 1px solid var(--border);
   background: var(--bg-white);
   border-radius: var(--radius-sm);
-  padding: 8px 10px;
+  padding: 10px 12px;
   margin-left: auto;
   cursor: pointer;
   color: var(--text-main);
   transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
 }
 
 .hamburger:hover {
@@ -111,7 +115,7 @@
 }
 
 .dropdownArrow {
-  font-size: 0.7em;
+  font-size: 0.7rem;
   margin-left: 4px;
   opacity: 0.8;
   transition: transform 0.2s ease;

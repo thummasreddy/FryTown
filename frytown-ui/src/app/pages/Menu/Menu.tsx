@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Menu.module.css';
-import { useCart } from '../../context/CartContext';
+import { useCart } from '../../context/useCart';
 
-// Import images directly
 import OriginalFries from '../../assets/Original_French_Fries.png';
 import CrispyKrinkle from '../../assets/Crispy_Crinkles_Fries.png';
 import CurlyFries from '../../assets/Curly_Fries.png';
@@ -19,14 +18,22 @@ import FryTownPotatoWedges from '../../assets/FryTown_Potato_Wedges.png';
 import FryTownSweetPotatoFries from '../../assets/FryTown_Sweet_Potato_Fries.png';
 import FryTownTaterTots from '../../assets/FryTown_Tater_tots.png';
 import FryTownWaffleFries from '../../assets/FryTown_Waffle_Fries.png';
-
-// Import dip images
 import CheeseDip from '../../assets/Cheese Dip.png';
 import GarlicMayo from '../../assets/Garlic Mayo.png';
 import MintChutney from '../../assets/Mint Chutney.png';
 import SweetChili from '../../assets/Sweet Chili.png';
 import BBQSauce from '../../assets/BBQ Sauce.png';
 import SrirachaMayo from '../../assets/Sriracha Mayo.png';
+import CocaCola from '../../assets/Coca-Cola.png';
+import Sprite from '../../assets/Sprite.png';
+import MangoLassi from '../../assets/Mango Lassi.png';
+import MasalaChai from '../../assets/Masala Chai.png';
+import IcedTea from '../../assets/Iced Tea.png';
+import Lemonade from '../../assets/lemonade.png';
+import MangoLemonade from '../../assets/Mango_lemonade.png';
+import StrawberryLemonade from '../../assets/Strawberry_lemonade.png';
+import WatermelonLemonade from '../../assets/Watermelon_lemonade.png';
+import Buttermilk from '../../assets/buttermilk.png';
 
 type MenuTab = 'classic' | 'build-your-fries' | 'specialty' | 'dips' | 'beverages';
 
@@ -56,15 +63,11 @@ interface MenuItem {
   id: string;
   name: string;
   description: string;
-  price: string;
-  image: any;
+  price: number;
+  image: string;
   popular?: boolean;
   spicy?: boolean;
   vegetarian?: boolean;
-  glutenFree?: boolean;
-  calories?: string;
-  ingredients?: string[];
-  buildYourOwn?: boolean;
   combo?: boolean;
 }
 
@@ -72,62 +75,58 @@ interface MenuProps {
   initialTab?: MenuTab;
 }
 
+const MENU_TABS: { id: MenuTab; label: string }[] = [
+  { id: 'classic', label: 'Classic Fries' },
+  { id: 'specialty', label: 'Specialty Fries' },
+  { id: 'build-your-fries', label: 'Build Your Fries' },
+  { id: 'dips', label: 'Dipping Sauces' },
+  { id: 'beverages', label: 'Beverages' },
+];
+
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(price);
+
+const getMenuTabFromPath = (pathname: string): MenuTab | null => {
+  const slug = pathname.split('/').pop() ?? '';
+
+  if (slug === 'fries') return 'classic';
+  if (slug === 'drinks') return 'beverages';
+  if (
+    slug === 'classic' ||
+    slug === 'build-your-fries' ||
+    slug === 'specialty' ||
+    slug === 'dips' ||
+    slug === 'beverages'
+  ) {
+    return slug;
+  }
+
+  return null;
+};
+
 export default function Menu({ initialTab = 'classic' }: MenuProps) {
-  const [activeTab, setActiveTab] = useState<MenuTab>(initialTab);
   const location = useLocation();
   const navigate = useNavigate();
   const { addItem } = useCart();
-  
-  // Build Your Fries state
+  const activeTab = getMenuTabFromPath(location.pathname) ?? initialTab;
+
   const [customization, setCustomization] = useState<FriesCustomization>({
     size: '',
     style: '',
     flavors: [],
   });
 
-  useEffect(() => {
-    const rawTabFromUrl = (location.pathname.split('/').pop() ?? '') as string;
-    const mappedTabFromUrl =
-      rawTabFromUrl === 'fries'
-        ? 'classic'
-        : rawTabFromUrl === 'drinks'
-          ? 'beverages'
-          : rawTabFromUrl;
-
-    if (
-      mappedTabFromUrl === 'classic' ||
-      mappedTabFromUrl === 'build-your-fries' ||
-      mappedTabFromUrl === 'specialty' ||
-      mappedTabFromUrl === 'dips' ||
-      mappedTabFromUrl === 'beverages'
-    ) {
-      setActiveTab(mappedTabFromUrl);
-    }
-  }, [location.pathname, navigate]);
-
-  const handleTabChange = (tab: MenuTab) => {
-    setActiveTab(tab);
-    navigate(`/menu/${tab}`);
-    window.scrollTo(0, 0);
-  };
-
-  const tabs: { id: MenuTab; label: string }[] = [
-    { id: 'classic', label: 'Classic Fries' },
-    { id: 'specialty', label: 'Specialty Fries' },
-    { id: 'build-your-fries', label: 'Build Your Fries' },
-    { id: 'dips', label: 'Dipping Sauces' },
-    { id: 'beverages', label: 'Beverages' },
-    
-  ];
-
-  // Build Your Fries Options
   const sizes: Size[] = [
     { name: 'Mini', price: 69 },
     { name: 'Regular (Best Seller)', price: 99 },
     { name: 'Jumbo', price: 139 },
   ];
 
-  const sizeImages: Record<string, any> = {
+  const sizeImages: Record<string, string> = {
     Mini: MiniSize,
     'Regular (Best Seller)': RegularSize,
     Jumbo: JumboSize,
@@ -143,7 +142,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
     { name: 'Waffle Fries', additionalPrice: 10 },
   ];
 
-  const styleImages: Record<string, any> = {
+  const styleImages: Record<string, string> = {
     'Classic Fries': FryTownClassicFries,
     'Crinkle Fries': FryTownCrinkleFries,
     'Curly Fries': FryTownCurlyFries,
@@ -154,127 +153,46 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
   };
 
   const flavors: Flavor[] = [
-    // Dry Masala Flavors
     { name: 'Classic Salted', category: 'dry' },
     { name: 'Peri Peri Masala', category: 'dry' },
     { name: 'Chaat Masala', category: 'dry' },
     { name: 'Mint & Coriander', category: 'dry' },
     { name: 'Curry Leaf Spice', category: 'dry' },
     { name: 'Garlic Pepper', category: 'dry' },
-    // Premium Flavors
     { name: 'Butter Garlic', category: 'premium', additionalPrice: 10 },
-    { name: 'Cheese & Jalapeño', category: 'premium', additionalPrice: 10 },
+    { name: 'Cheese & Jalapeno', category: 'premium', additionalPrice: 10 },
     { name: 'Lemon Pepper', category: 'premium', additionalPrice: 10 },
-    { name: 'Smoky BBQ (Indian Style)', category: 'premium', additionalPrice: 10 },
-    // Sweet Option
+    { name: 'Smoky BBQ', category: 'premium', additionalPrice: 10 },
     { name: 'Cinnamon Sugar Fries', category: 'sweet' },
   ];
 
-  const handleSizeSelect = (size: string) => {
-    setCustomization(prev => ({ ...prev, size }));
-  };
-
-  const handleStyleSelect = (style: string) => {
-    setCustomization(prev => ({ ...prev, style }));
-  };
-
-  const handleFlavorToggle = (flavor: string) => {
-    setCustomization(prev => {
-      const flavors = [...prev.flavors];
-      const index = flavors.indexOf(flavor);
-      if (index > -1) {
-        flavors.splice(index, 1);
-      } else {
-        if (flavors.length < 2) {
-          flavors.push(flavor);
-        } else {
-          // Replace the second flavor if already have 2
-          flavors[1] = flavor;
-        }
-      }
-      return { ...prev, flavors };
-    });
-  };
-
-  const handleAddToCart = () => {
-    if (!customization.size || !customization.style || customization.flavors.length === 0) {
-      return;
-    }
-
-    const customFriesItem = {
-      id: `custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      name: 'Custom Build Your Fries',
-      price: calculateTotal(),
-      image: OriginalFries,
-      customizations: {
-        size: customization.size,
-        style: customization.style,
-        flavors: customization.flavors,
-      },
-      type: 'custom' as const,
-    };
-
-    addItem(customFriesItem);
-    
-    // Reset customization after adding to cart
-    setCustomization({
-      size: '',
-      style: '',
-      flavors: [],
-    });
-  };
-
-  const handleAddMenuItemToCart = (item: MenuItem) => {
-    const cartItem = {
-      id: item.id,
-      name: item.name,
-      price: parseInt(item.price.replace('₹', '')),
-      image: item.image,
-      type: 'regular' as const,
-    };
-    
-    addItem(cartItem);
-  };
-
   const calculateTotal = () => {
     let total = 0;
-    
-    // Add size price
-    const selectedSize = sizes.find(s => s.name === customization.size);
+
+    const selectedSize = sizes.find((size) => size.name === customization.size);
     if (selectedSize) total += selectedSize.price;
-    
-    // Add style additional price
-    const selectedStyle = fryStyles.find(s => s.name === customization.style);
+
+    const selectedStyle = fryStyles.find((style) => style.name === customization.style);
     if (selectedStyle?.additionalPrice) total += selectedStyle.additionalPrice;
-    
-    // Add flavors additional price
-    customization.flavors.forEach(flavorName => {
-      const flavor = flavors.find(f => f.name === flavorName);
+
+    customization.flavors.forEach((flavorName) => {
+      const flavor = flavors.find((entry) => entry.name === flavorName);
       if (flavor?.additionalPrice) total += flavor.additionalPrice;
     });
-    
-    // Add extra charge for mixing flavors if more than one
+
     if (customization.flavors.length > 1) {
-      total += 10; // +₹10 for mixing 2 flavors
+      total += 10;
     }
-    
+
     return total;
   };
 
   const friesMenu: MenuItem[] = [
     {
-      id: 'build-your-own',
-      name: '🧾 BUILD YOUR FRIES',
-      description: 'Create your perfect fries with your choice of size, style, and flavor!',
-      price: `₹${calculateTotal()}`,
-      image: OriginalFries,
-      buildYourOwn: true,
-    },
-    {
       id: 'classic-fries',
       name: 'Classic Fries',
-      description: 'Hand-cut golden fries with our signature seasoning',
-      price: '₹99',
+      description: 'Hand-cut golden fries with house seasoning and a crisp finish.',
+      price: 99,
       image: OriginalFries,
       vegetarian: true,
       popular: true,
@@ -282,16 +200,16 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
     {
       id: 'sweet-potato-fries',
       name: 'Sweet Potato Fries',
-      description: 'Crispy sweet potato fries with a hint of cinnamon',
-      price: '₹119',
+      description: 'Sweet potato fries with a gentle spice blend and caramelized edges.',
+      price: 119,
       image: CrispyKrinkle,
       vegetarian: true,
     },
     {
       id: 'curly-fries',
       name: 'Spicy Curly Fries',
-      description: 'Fun spiral-cut fries seasoned with our signature blend of Cajun spices and herbs. A customer favorite!',
-      price: '₹99',
+      description: 'Spiral fries with a bold seasoning blend and extra crunch.',
+      price: 99,
       image: CurlyFries,
       spicy: true,
       popular: true,
@@ -300,16 +218,16 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
     {
       id: 'waffle-fries',
       name: 'Belgian Waffle Fries',
-      description: 'Unique waffle-shaped fries with extra surface area for maximum dipping pleasure. Crispy edges, soft center.',
-      price: '₹99',
+      description: 'Crisp waffle-cut fries made for maximum sauce coverage.',
+      price: 99,
       image: WaffleFries,
       vegetarian: true,
     },
     {
       id: 'tater-tots',
       name: 'Golden Tater Tots',
-      description: 'Crispy, golden-brown potato tots that are crunchy outside and soft inside. The perfect comfort food.',
-      price: '₹99',
+      description: 'Crunchy outside, fluffy inside, and ideal for dipping.',
+      price: 99,
       image: TaterTots,
       popular: true,
       vegetarian: true,
@@ -320,67 +238,66 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
     {
       id: 'masala-fries',
       name: 'Masala Fries',
-      description: 'Crispy fries tossed in our special Indian spice blend with onions, coriander, and a squeeze of lemon.',
-      price: '₹129',
+      description: 'Classic fries tossed with Indian spices, onions, coriander, and lemon.',
+      price: 129,
       image: OriginalFries,
       spicy: true,
       popular: true,
-      vegetarian: true
+      vegetarian: true,
     },
     {
       id: 'paneer-tikka-fries',
       name: 'Paneer Tikka Fries',
-      description: 'Golden fries topped with spicy paneer tikka, mint chutney, and sev for extra crunch.',
-      price: '₹159',
+      description: 'Loaded fries with paneer tikka, mint chutney, and crunchy sev.',
+      price: 159,
       image: CrispyKrinkle,
       vegetarian: true,
-      popular: true
+      popular: true,
     },
     {
       id: 'chicken-tandoori-fries',
       name: 'Chicken Tandoori Fries',
-      description: 'A delicious combination of tender tandoori chicken pieces on a bed of crispy fries, drizzled with mint yogurt.',
-      price: '₹179',
+      description: 'Crispy fries topped with tandoori chicken and mint yogurt.',
+      price: 179,
       image: CurlyFries,
-      spicy: true
+      spicy: true,
     },
     {
       id: 'mexican-loaded-fries',
       name: 'Mexican Loaded Fries',
-      description: 'Crispy fries loaded with spicy beans, corn, jalapeños, cheese, and a dollop of sour cream.',
-      price: '₹169',
+      description: 'Beans, corn, jalapenos, cheese, and sour cream over crispy fries.',
+      price: 169,
       image: WaffleFries,
       vegetarian: true,
-      popular: true
+      popular: true,
     },
-    // Combo items
     {
       id: 'mini-combo',
       name: 'Mini Combo',
-      description: 'Mini fries + 1 dip + 1 can of soda',
-      price: '₹149',
+      description: 'Mini fries, one dip, and one canned drink.',
+      price: 149,
       image: TaterTots,
       combo: true,
-      vegetarian: true
+      vegetarian: true,
     },
     {
       id: 'regular-combo',
       name: 'Regular Combo',
-      description: 'Regular fries + 1 dip + 1 can of soda',
-      price: '₹189',
+      description: 'Regular fries, one dip, and one canned drink.',
+      price: 189,
       image: OriginalFries,
       combo: true,
       vegetarian: true,
-      popular: true
+      popular: true,
     },
     {
       id: 'jumbo-combo',
       name: 'Jumbo Combo',
-      description: 'Jumbo fries + 2 dips + 1 large soda',
-      price: '₹249',
+      description: 'Jumbo fries, two dips, and one large drink.',
+      price: 249,
       image: CurlyFries,
       combo: true,
-      vegetarian: true
+      vegetarian: true,
     },
   ];
 
@@ -388,115 +305,140 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
     {
       id: 'cheese-dip',
       name: 'Cheese Dip',
-      description: 'Creamy, melted cheese sauce with a hint of garlic',
-      price: '₹25',
+      description: 'Creamy cheese sauce with a gentle garlic finish.',
+      price: 25,
       image: CheeseDip,
-      vegetarian: true
+      vegetarian: true,
     },
     {
       id: 'garlic-mayo',
       name: 'Garlic Mayo',
-      description: 'Creamy mayonnaise with roasted garlic and herbs',
-      price: '₹20',
+      description: 'Roasted garlic mayo for rich, mellow flavor.',
+      price: 20,
       image: GarlicMayo,
-      vegetarian: true
+      vegetarian: true,
     },
     {
       id: 'mint-chutney',
       name: 'Mint Chutney',
-      description: 'Fresh mint and coriander chutney with a touch of spice',
-      price: '₹15',
+      description: 'Fresh mint and coriander chutney with bright acidity.',
+      price: 15,
       image: MintChutney,
       vegetarian: true,
-      popular: true
     },
     {
       id: 'sweet-chili',
       name: 'Sweet Chili',
-      description: 'Sweet and spicy chili sauce with a tangy finish',
-      price: '₹20',
+      description: 'A sweet-spicy sauce with a clean finish.',
+      price: 20,
       image: SweetChili,
-      vegetarian: true
+      vegetarian: true,
     },
     {
       id: 'bbq-sauce',
       name: 'BBQ Sauce',
-      description: 'Smoky and sweet barbecue sauce',
-      price: '₹20',
+      description: 'Smoky barbecue sauce with rounded sweetness.',
+      price: 20,
       image: BBQSauce,
-      vegetarian: true
+      vegetarian: true,
     },
     {
       id: 'sriracha-mayo',
       name: 'Sriracha Mayo',
-      description: 'Creamy mayo with a spicy sriracha kick',
-      price: '₹25',
+      description: 'Creamy mayo with a sharp chili kick.',
+      price: 25,
       image: SrirachaMayo,
       spicy: true,
-      vegetarian: true
+      vegetarian: true,
     },
   ];
 
   const drinksMenu: MenuItem[] = [
-    {
-      id: 'coke',
-      name: 'Coca-Cola',
-      description: 'Classic Coca-Cola',
-      price: '₹40',
-      image: OriginalFries,
-      vegetarian: true
-    },
-    {
-      id: 'sprite',
-      name: 'Sprite',
-      description: 'Crisp, refreshing lemon-lime soda',
-      price: '₹40',
-      image: CrispyKrinkle,
-      vegetarian: true
-    },
-    {
-      id: 'mango-lassi',
-      name: 'Mango Lassi',
-      description: 'Creamy yogurt drink with sweet mango',
-      price: '₹60',
-      image: CurlyFries,
-      vegetarian: true,
-      popular: true
-    },
-    {
-      id: 'masala-chai',
-      name: 'Masala Chai',
-      description: 'Spiced Indian tea with milk',
-      price: '₹50',
-      image: WaffleFries,
-      vegetarian: true
-    },
-    {
-      id: 'iced-tea',
-      name: 'Iced Tea',
-      description: 'Refreshing iced tea with lemon',
-      price: '₹45',
-      image: TaterTots,
-      vegetarian: true
-    },
-    {
-      id: 'mineral-water',
-      name: 'Mineral Water',
-      description: '500ml bottled water',
-      price: '₹30',
-      image: OriginalFries,
-      vegetarian: true
-    },
+    { id: 'coke', name: 'Coca-Cola', description: 'Classic Coca-Cola.', price: 40, image: CocaCola, vegetarian: true },
+    { id: 'sprite', name: 'Sprite', description: 'Refreshing lemon-lime soda.', price: 40, image: Sprite, vegetarian: true },
+    { id: 'mango-lassi', name: 'Mango Lassi', description: 'Creamy yogurt drink with sweet mango.', price: 60, image: MangoLassi, vegetarian: true },
+    { id: 'masala-chai', name: 'Masala Chai', description: 'Spiced Indian tea with milk.', price: 50, image: MasalaChai, vegetarian: true },
+    { id: 'iced-tea', name: 'Iced Tea', description: 'Iced tea with lemon.', price: 45, image: IcedTea, vegetarian: true },
+    { id: 'lemonade', name: 'Fresh Lemonade', description: 'Fresh-squeezed lemonade.', price: 35, image: Lemonade, vegetarian: true },
+    { id: 'mango-lemonade', name: 'Mango Lemonade', description: 'Mango-infused lemonade.', price: 45, image: MangoLemonade, vegetarian: true, popular: true },
+    { id: 'strawberry-lemonade', name: 'Strawberry Lemonade', description: 'Sweet strawberry lemonade blend.', price: 45, image: StrawberryLemonade, vegetarian: true },
+    { id: 'watermelon-lemonade', name: 'Watermelon Lemonade', description: 'Cool watermelon lemonade.', price: 45, image: WatermelonLemonade, vegetarian: true },
+    { id: 'buttermilk', name: 'Buttermilk', description: 'Traditional Indian buttermilk.', price: 30, image: Buttermilk, vegetarian: true },
   ];
 
+  const handleTabChange = (tab: MenuTab) => {
+    navigate(`/menu/${tab}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSizeSelect = (size: string) => {
+    setCustomization((prev) => ({ ...prev, size }));
+  };
+
+  const handleStyleSelect = (style: string) => {
+    setCustomization((prev) => ({ ...prev, style }));
+  };
+
+  const handleFlavorToggle = (flavor: string) => {
+    setCustomization((prev) => {
+      const nextFlavors = [...prev.flavors];
+      const existingIndex = nextFlavors.indexOf(flavor);
+
+      if (existingIndex > -1) {
+        nextFlavors.splice(existingIndex, 1);
+      } else if (nextFlavors.length < 2) {
+        nextFlavors.push(flavor);
+      } else {
+        nextFlavors[1] = flavor;
+      }
+
+      return { ...prev, flavors: nextFlavors };
+    });
+  };
+
+  const handleAddToCart = () => {
+    if (!customization.size || !customization.style || customization.flavors.length === 0) {
+      return;
+    }
+
+    addItem({
+      id: `custom-${crypto.randomUUID()}`,
+      name: 'Custom Build Your Fries',
+      price: calculateTotal(),
+      image: OriginalFries,
+      customizations: {
+        size: customization.size,
+        style: customization.style,
+        flavors: customization.flavors,
+      },
+      type: 'custom',
+    });
+
+    setCustomization({
+      size: '',
+      style: '',
+      flavors: [],
+    });
+  };
+
+  const handleAddMenuItemToCart = (item: MenuItem) => {
+    addItem({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      image: item.image,
+      type: 'regular',
+    });
+  };
+
   const renderBuildYourOwnFries = () => {
+    const totalPrice = calculateTotal();
     const isSizeSelected = !!customization.size;
     const isStyleSelected = !!customization.style;
     const isFlavorSelected = customization.flavors.length > 0;
-    
+
     return (
       <div className={`${styles.menuItem} ${styles.buildYourOwn}`}>
-        {/* Progress Indicator */}
         <div className={styles.progressIndicator}>
           <div className={`${styles.progressStep} ${isSizeSelected ? styles.completed : styles.active}`}>
             <div className={styles.progressStepNumber}>1</div>
@@ -513,157 +455,168 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
             <div className={styles.progressStepLabel}>Flavor</div>
           </div>
         </div>
-        
+
         <div className={styles.buildYourOwnContent}>
-          <p className={styles.buildYourOwnSubtitle}>Create your perfect fries with your choice of size, style, and flavor!</p>
-      
-      <div className={`${styles.buildSection} ${isSizeSelected ? styles.completed : ''}`}>
-        <h3 className={styles.sectionTitle}>PICK YOUR SIZE</h3>
-        <div className={styles.optionGroup}>
-          {sizes.map(size => (
-            <button
-              key={size.name}
-              className={`${styles.optionButton} ${customization.size === size.name ? styles.selected : ''}`}
-              onClick={() => handleSizeSelect(size.name)}
-            >
-              <img className={styles.optionImage} src={sizeImages[size.name] ?? OriginalFries} alt={size.name} />
-              <span className={styles.optionName}>{size.name}</span>
-              <span className={styles.optionPrice}>₹{size.price}</span>
-              {size.name.includes('Best Seller') && <span className={styles.bestSellerBadge}>BEST SELLER</span>}
-            </button>
-          ))}
-        </div>
-      </div>
+          <p className={styles.buildYourOwnSubtitle}>
+            Build your own box with one size, one fry style, and up to two flavors.
+          </p>
 
-      <div className={`${styles.buildSection} ${isStyleSelected ? styles.completed : ''}`}>
-        <h3 className={styles.sectionTitle}>PICK YOUR STYLE</h3>
-        <div className={styles.optionGroup}>
-          {fryStyles.map(style => (
-            <button
-              key={style.name}
-              className={`${styles.optionButton} ${customization.style === style.name ? styles.selected : ''}`}
-              onClick={() => handleStyleSelect(style.name)}
-            >
-              <img className={styles.optionImage} src={styleImages[style.name] ?? OriginalFries} alt={style.name} />
-              <span className={styles.optionName}>{style.name}</span>
-              {style.additionalPrice && (
-                <span className={styles.additionalPrice}>+₹{style.additionalPrice}</span>
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className={`${styles.buildSection} ${isFlavorSelected ? styles.completed : ''}`}>
-        <h3 className={styles.sectionTitle}>PICK YOUR FLAVOR</h3>
-        
-        <div className={styles.flavorCategory}>
-          <h4 className={styles.flavorCategoryTitle}>Dry Masala Flavors</h4>
-          <div className={styles.optionGroup}>
-            {flavors
-              .filter(f => f.category === 'dry')
-              .map(flavor => (
+          <div className={`${styles.buildSection} ${isSizeSelected ? styles.completed : ''}`}>
+            <h3 className={styles.sectionTitle}>Pick Your Size</h3>
+            <div className={styles.optionGroup}>
+              {sizes.map((size) => (
                 <button
-                  key={flavor.name}
-                  className={`${styles.optionButton} ${customization.flavors.includes(flavor.name) ? styles.selected : ''}`}
-                  onClick={() => handleFlavorToggle(flavor.name)}
+                  key={size.name}
+                  type="button"
+                  className={`${styles.optionButton} ${customization.size === size.name ? styles.selected : ''}`}
+                  onClick={() => handleSizeSelect(size.name)}
                 >
-                  {flavor.name}
-                  {flavor.additionalPrice && (
-                    <span className={styles.flavorPrice}>+₹{flavor.additionalPrice}</span>
+                  <img className={styles.optionImage} src={sizeImages[size.name] ?? OriginalFries} alt={size.name} />
+                  <span className={styles.optionName}>{size.name}</span>
+                  <span className={styles.optionPrice}>{formatPrice(size.price)}</span>
+                  {size.name.includes('Best Seller') && <span className={styles.bestSellerBadge}>Best Seller</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className={`${styles.buildSection} ${isStyleSelected ? styles.completed : ''}`}>
+            <h3 className={styles.sectionTitle}>Pick Your Style</h3>
+            <div className={styles.optionGroup}>
+              {fryStyles.map((style) => (
+                <button
+                  key={style.name}
+                  type="button"
+                  className={`${styles.optionButton} ${customization.style === style.name ? styles.selected : ''}`}
+                  onClick={() => handleStyleSelect(style.name)}
+                >
+                  <img className={styles.optionImage} src={styleImages[style.name] ?? OriginalFries} alt={style.name} />
+                  <span className={styles.optionName}>{style.name}</span>
+                  {style.additionalPrice && (
+                    <span className={styles.additionalPrice}>+{formatPrice(style.additionalPrice)}</span>
                   )}
                 </button>
               ))}
+            </div>
           </div>
-        </div>
 
-        <div className={styles.flavorCategory}>
-          <div className={styles.flavorCategoryHeader}>
-            <h4 className={styles.flavorCategoryTitle}>Premium Flavors</h4>
-            <span className={styles.premiumBadge}>+₹10</span>
-          </div>
-          <div className={styles.optionGroup}>
-            {flavors
-              .filter(f => f.category === 'premium')
-              .map(flavor => (
-                <button
-                  key={flavor.name}
-                  className={`${styles.optionButton} ${customization.flavors.includes(flavor.name) ? styles.selected : ''}`}
-                  onClick={() => handleFlavorToggle(flavor.name)}
-                >
-                  {flavor.name}
-                  <span className={styles.flavorPrice}>+₹{flavor.additionalPrice}</span>
-                </button>
-              ))}
-          </div>
-        </div>
+          <div className={`${styles.buildSection} ${isFlavorSelected ? styles.completed : ''}`}>
+            <h3 className={styles.sectionTitle}>Pick Your Flavor</h3>
 
-        <div className={styles.flavorCategory}>
-          <h4 className={styles.flavorCategoryTitle}>Sweet Option</h4>
-          <div className={styles.optionGroup}>
-            {flavors
-              .filter(f => f.category === 'sweet')
-              .map(flavor => (
-                <button
-                  key={flavor.name}
-                  className={`${styles.optionButton} ${customization.flavors.includes(flavor.name) ? styles.selected : ''}`}
-                  onClick={() => handleFlavorToggle(flavor.name)}
-                >
-                  {flavor.name}
-                </button>
-              ))}
-          </div>
-        </div>
-      </div>
+            <div className={styles.flavorCategory}>
+              <h4 className={styles.flavorCategoryTitle}>Dry Masala Flavors</h4>
+              <div className={styles.optionGroup}>
+                {flavors
+                  .filter((flavor) => flavor.category === 'dry')
+                  .map((flavor) => (
+                    <button
+                      key={flavor.name}
+                      type="button"
+                      className={`${styles.optionButton} ${customization.flavors.includes(flavor.name) ? styles.selected : ''}`}
+                      onClick={() => handleFlavorToggle(flavor.name)}
+                    >
+                      {flavor.name}
+                    </button>
+                  ))}
+              </div>
+            </div>
 
-      <div className={styles.buildFooter}>
-        <p className={styles.mixFlavors}>
-          <span className={styles.infoIcon}>ℹ️</span> Mix 2 flavors for +₹10 extra
-        </p>
-        
-        <div className={styles.totalPrice}>
-          <span className={styles.totalLabel}>Total:</span>
-          <span className={`${styles.totalAmount} ${styles.updating}`}>₹{calculateTotal()}</span>
-        </div>
-        
-        <button 
-          className={styles.addToCartButton}
-          disabled={!customization.size || !customization.style || customization.flavors.length === 0}
-          onClick={handleAddToCart}
-        >
-          Add to Cart - ₹{calculateTotal()}
-        </button>
-      </div>
+            <div className={styles.flavorCategory}>
+              <div className={styles.flavorCategoryHeader}>
+                <h4 className={styles.flavorCategoryTitle}>Premium Flavors</h4>
+                <span className={styles.premiumBadge}>+10</span>
+              </div>
+              <div className={styles.optionGroup}>
+                {flavors
+                  .filter((flavor) => flavor.category === 'premium')
+                  .map((flavor) => (
+                    <button
+                      key={flavor.name}
+                      type="button"
+                      className={`${styles.optionButton} ${customization.flavors.includes(flavor.name) ? styles.selected : ''}`}
+                      onClick={() => handleFlavorToggle(flavor.name)}
+                    >
+                      {flavor.name}
+                      <span className={styles.flavorPrice}>+{formatPrice(flavor.additionalPrice ?? 0)}</span>
+                    </button>
+                  ))}
+              </div>
+            </div>
+
+            <div className={styles.flavorCategory}>
+              <h4 className={styles.flavorCategoryTitle}>Sweet Option</h4>
+              <div className={styles.optionGroup}>
+                {flavors
+                  .filter((flavor) => flavor.category === 'sweet')
+                  .map((flavor) => (
+                    <button
+                      key={flavor.name}
+                      type="button"
+                      className={`${styles.optionButton} ${customization.flavors.includes(flavor.name) ? styles.selected : ''}`}
+                      onClick={() => handleFlavorToggle(flavor.name)}
+                    >
+                      {flavor.name}
+                    </button>
+                  ))}
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.buildFooter}>
+            <p className={styles.mixFlavors}>Mix two flavors for an additional {formatPrice(10)}.</p>
+
+            <div className={styles.totalPrice}>
+              <span className={styles.totalLabel}>Total</span>
+              <span className={`${styles.totalAmount} ${styles.updating}`}>{formatPrice(totalPrice)}</span>
+            </div>
+
+            <button
+              type="button"
+              className={styles.addToCartButton}
+              disabled={!customization.size || !customization.style || customization.flavors.length === 0}
+              onClick={handleAddToCart}
+            >
+              Add to Cart {totalPrice > 0 ? `- ${formatPrice(totalPrice)}` : ''}
+            </button>
+          </div>
         </div>
       </div>
     );
   };
 
-  const renderMenuItems = (items: MenuItem[]) => {
-    return items.map((item) => (
+  const renderMenuItems = (items: MenuItem[]) =>
+    items.map((item) => (
       <div key={item.id} className={styles.menuItem}>
         <div className={styles.itemImage}>
           <img src={item.image} alt={item.name} />
-          {item.popular && <span className={styles.popularBadge}>Popular</span>}
+          <div className={styles.badgesContainer}>
+            {item.popular && <span className={`${styles.badge} ${styles.popular}`}>Popular</span>}
+            {item.spicy && <span className={`${styles.badge} ${styles.spicy}`}>Spicy</span>}
+            {item.vegetarian && <span className={`${styles.badge} ${styles.vegetarian}`}>Veg</span>}
+          </div>
         </div>
         <div className={styles.itemDetails}>
-          <h3>{item.name}</h3>
+          <div className={styles.itemHeader}>
+            <h3>{item.name}</h3>
+          </div>
           <p>{item.description}</p>
           <div className={styles.itemFooter}>
-            <span className={styles.price}>{item.price}</span>
-            <button className={styles.addToCart} onClick={() => handleAddMenuItemToCart(item)}>Add to Cart</button>
+            <span className={styles.price}>{formatPrice(item.price)}</span>
+            <button type="button" className={styles.addToCart} onClick={() => handleAddMenuItemToCart(item)}>
+              Add to Cart
+            </button>
           </div>
         </div>
       </div>
     ));
-  };
 
   return (
     <div className={styles.menuContainer}>
       <div className={styles.tabs}>
-        {tabs.map(tab => (
+        {MENU_TABS.map((tab) => (
           <button
             key={tab.id}
+            type="button"
             className={`${styles.tab} ${activeTab === tab.id ? styles.activeTab : ''}`}
             onClick={() => handleTabChange(tab.id)}
           >
@@ -671,13 +624,12 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
           </button>
         ))}
       </div>
+
       <div className={styles.menuContent}>
         {activeTab === 'classic' && (
           <>
             <h2 className={styles.sectionHeader}>Classic Fries</h2>
-            <div className={styles.menuGrid}>
-              {renderMenuItems(friesMenu.filter(item => !item.buildYourOwn))}
-            </div>
+            <div className={styles.menuGrid}>{renderMenuItems(friesMenu)}</div>
           </>
         )}
 
@@ -692,27 +644,19 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
           <>
             <h2 className={styles.sectionHeader}>Specialty Fries</h2>
             <div className={styles.menuGrid}>
-              {renderMenuItems(specialtyMenu.filter(item => !item.combo))}
+              {renderMenuItems(specialtyMenu.filter((item) => !item.combo))}
             </div>
 
             <h2 className={styles.sectionHeader}>Combos</h2>
             <div className={styles.menuGrid}>
-              {renderMenuItems(specialtyMenu.filter(item => item.combo))}
+              {renderMenuItems(specialtyMenu.filter((item) => item.combo))}
             </div>
           </>
         )}
 
-        {activeTab === 'dips' && (
-          <div className={styles.menuGrid}>
-            {renderMenuItems(dipsMenu)}
-          </div>
-        )}
+        {activeTab === 'dips' && <div className={styles.menuGrid}>{renderMenuItems(dipsMenu)}</div>}
 
-        {activeTab === 'beverages' && (
-          <div className={styles.menuGrid}>
-            {renderMenuItems(drinksMenu)}
-          </div>
-        )}
+        {activeTab === 'beverages' && <div className={styles.menuGrid}>{renderMenuItems(drinksMenu)}</div>}
       </div>
     </div>
   );

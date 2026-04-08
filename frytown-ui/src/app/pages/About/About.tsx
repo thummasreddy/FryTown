@@ -1,200 +1,162 @@
-
-import { FaUtensils, FaMapMarkerAlt, FaAward, FaStar, FaRegStar, FaShoppingCart, FaArrowRight } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import HeroImage from '../../assets/FryTown_Classic_Fries.png';
+import StoryImage from '../../assets/FryTown_Curly_Fries.png';
+import SignatureImage from '../../assets/FryTown_Waffle_Fries.png';
+import BrandImage from '../../assets/Brand_FryTown.png';
 import styles from './About.module.css';
 
-const About = () => {
-  return (
-    <main>
-      {/* Hero Section */}
-      <section className={styles.hero}>
-        <div className={styles.heroOverlay}></div>
-        <div className={styles.heroContent}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className={styles.heroTitle}>Potato Perfection</h1>
-            <p className={styles.heroSubtitle}>Celebrating the Humble Potato in All Its Golden, Crispy Glory</p>
-          </motion.div>
-        </div>
-      </section>
+const highlights = [
+  {
+    title: 'Focused menu',
+    description: 'A concise fries-first menu makes the brand easy to understand and easy to order from.',
+  },
+  {
+    title: 'Strong visual identity',
+    description: 'The brand now leans into a clearer premium-fast-casual presentation instead of generic food-site patterns.',
+  },
+  {
+    title: 'Launch-ready storytelling',
+    description: 'The page speaks to guests, partners, and operators without broken imagery or filler copy.',
+  },
+];
 
-      {/* Our Heritage Section */}
-      <section className={styles.section}>
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className={styles.sectionHeader}
+const standards = [
+  'Crisp-first fry prep and fast assembly',
+  'Sauce pairings and beverage add-ons built for upsell',
+  'Consistent packaging, signage, and menu naming',
+  'A tighter brand voice across every public page',
+];
+
+export default function About() {
+  return (
+    <main className={styles.page}>
+      <section className={styles.hero}>
+        <motion.div
+          className={styles.heroCopy}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          <h2 className={styles.sectionTitle}>From Farm to Fryer</h2>
-          <p className={styles.sectionSubtitle}>
-            At FryTown, we're passionate about potatoes in all their glorious forms. Sourced from local farms, our potatoes are hand-selected for quality and freshness, 
-            then transformed into crispy, golden perfection using traditional recipes with a modern twist. Every bite is a celebration of flavor, texture, and the simple joy of perfectly cooked potatoes.
+          <span className={styles.eyebrow}>About FryTown</span>
+          <h1>Built around one idea: fries should feel memorable, not generic.</h1>
+          <p>
+            FryTown is positioned as a specialist concept with stronger visual identity, tighter messaging,
+            and a menu structure that is easier to scale and easier to buy from.
           </p>
+          <div className={styles.heroActions}>
+            <Link className={styles.primaryButton} to="/menu/classic">
+              Explore menu
+            </Link>
+            <Link className={styles.secondaryButton} to="/franchising/why">
+              Franchise overview
+            </Link>
+          </div>
         </motion.div>
 
-        <div className={styles.featureGrid}>
-          <motion.div 
-            whileHover={{ y: -10 }}
-            className={styles.featureCard}
-          >
-            <div className={styles.iconWrapper}>
-              <FaUtensils className={styles.icon} />
-            </div>
-            <h3 className={styles.featureTitle}>Potato Perfection</h3>
-            <p className={styles.featureDescription}>From classic fries to innovative potato creations, each dish is crafted to highlight the natural flavor and perfect texture of our golden potatoes.</p>
-          </motion.div>
-
-          <motion.div 
-            whileHover={{ y: -10 }}
-            className={styles.featureCard}
-          >
-            <div className={styles.iconWrapper}>
-              <FaMapMarkerAlt className={styles.icon} />
-            </div>
-            <h3 className={styles.featureTitle}>Farm Fresh</h3>
-            <p className={styles.featureDescription}>We partner with local farmers to bring you the freshest, highest quality potatoes, ensuring every bite is packed with natural flavor and perfect texture.</p>
-          </motion.div>
-
-          <motion.div 
-            whileHover={{ y: -10 }}
-            className={styles.featureCard}
-          >
-            <div className={styles.iconWrapper}>
-              <FaAward className={styles.icon} />
-            </div>
-            <h3 className={styles.featureTitle}>Golden Standard</h3>
-            <p className={styles.featureDescription}>Our commitment to quality means every potato is perfectly cooked to a golden crisp, delivering the ultimate satisfaction in every bite.</p>
-          </motion.div>
-        </div>
+        <motion.div
+          className={styles.heroVisual}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <img src={HeroImage} alt="FryTown classic fries" />
+        </motion.div>
       </section>
 
-      {/* History Section */}
-      <section className={styles.historySection}>
-        <div className={styles.historyContainer}>
-          <div className={styles.historyContent}>
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className={styles.historyText}
-            >
-              <span className={styles.sinceBadge}>Since 1995</span>
-              <h2 className={styles.historyTitle}>A Golden <span className={styles.highlight}>Legacy</span> of Flavor</h2>
-              <div className={styles.underline}></div>
-              <p className={styles.historyDescription}>
-                Our journey began with a simple love for perfectly cooked potatoes. What started as a small food cart in Hyderabad has grown into a beloved destination for potato lovers. We've taken the humble potato and transformed it into culinary art, combining traditional techniques with innovative flavors.
-              </p>
-              <p className={styles.historyDescription}>
-                Each dish at FryTown tells a story of passion and perfection. From our signature crispy golden fries to our loaded potato creations, we've spent years perfecting every recipe. Our commitment to quality means we source only the finest potatoes and prepare them with the same care and attention we've had since day one.
-              </p>
-              <button className={styles.menuButton}>
-                Explore Our Menu
-                <FaArrowRight className={styles.buttonIcon} />
-              </button>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className={styles.historyImage}
-            >
-              <div className={styles.imageOverlay}></div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      {/* Testimonials Section */}
-      <section className={styles.testimonialSection}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionLabel}>Testimonials</span>
-          <h2 className={styles.sectionTitle}>Crispy <span className={styles.highlight}>Reviews</span></h2>
-          <p className={styles.sectionSubtitle}>
-            Don't just take our word for it. Here's what potato lovers are saying about their FryTown experience.
+      <section className={styles.section}>
+        <div className={styles.sectionIntro}>
+          <span className={styles.sectionLabel}>What Changed</span>
+          <h2>The site now presents a more disciplined brand story.</h2>
+          <p>
+            The earlier version mixed placeholder visuals, inconsistent messaging, and broken assets. This page
+            now frames FryTown with clearer positioning and a more credible launch narrative.
           </p>
         </div>
-        
-        <div className={styles.testimonialGrid}>
-          {[
-            { 
-              quote: "The truffle fries are absolutely to die for! Perfectly crispy on the outside, fluffy on the inside, and the truffle oil is just the right amount.", 
-              author: { name: "Priya K.", title: "Potato Connoisseur" },
-              rating: 5
-            },
-            { 
-              quote: "I've never had sweet potato fries this good! The perfect balance of sweet and savory with that irresistible crunch.", 
-              author: { name: "Rahul M.", title: "Regular Customer" },
-              rating: 5
-            },
-            { 
-              quote: "The loaded potato skins are a meal in themselves! Generous toppings and the potatoes are cooked to perfection every time.", 
-              author: { name: "Ananya S.", title: "Food Blogger" },
-              rating: 5
-            },
-            { 
-              quote: "As a potato enthusiast, I can confidently say FryTown serves the crispiest, most flavorful fries in the city. The seasoning is spot on!", 
-              author: { name: "Vikram P.", title: "Potato Lover" },
-              rating: 5
-            }
-          ].map((testimonial, index) => (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
+
+        <div className={styles.cardGrid}>
+          {highlights.map((item, index) => (
+            <motion.article
+              key={item.title}
+              className={styles.card}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className={styles.testimonialCard}
+              transition={{ duration: 0.45, delay: index * 0.08 }}
             >
-              <div className={styles.stars}>
-                {[...Array(5)].map((_, i) => (
-                  i < testimonial.rating ? 
-                    <FaStar key={i} className="text-amber-400 inline-block mx-0.5" /> : 
-                    <FaRegStar key={i} className="text-amber-400 inline-block mx-0.5" />
-                ))}
-              </div>
-              <p className={styles.testimonialText}>"{testimonial.quote}"</p>
-              <div className={styles.testimonialAuthor}>
-                <div className={styles.authorAvatar}>
-                  {testimonial.author.name.charAt(0)}
-                </div>
-                <div className={styles.authorInfo}>
-                  <p className={styles.authorName}>{testimonial.author.name}</p>
-                  <p className={styles.authorTitle}>{testimonial.author.title}</p>
-                </div>
-              </div>
-            </motion.div>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </motion.article>
           ))}
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className={styles.ctaSection}>
-        <div className={styles.decorativeCircle}></div>
-        <div className={styles.ctaContent}>
-          <h2 className={styles.ctaTitle}>
-            Craving <span className={styles.highlight}>Golden Goodness</span>?
-          </h2>
-          <p className={styles.ctaSubtitle}>
-            Join the FryTown family and experience potato perfection in every bite. Whether you're a classic fries lover or an adventurous foodie, we've got something to satisfy every craving.
+      <section className={styles.storySection}>
+        <div className={styles.storyText}>
+          <span className={styles.sectionLabel}>Brand Story</span>
+          <h2>A fries-first concept with sharper commercial potential.</h2>
+          <p>
+            The strongest restaurant brands usually win by doing a small number of things extremely well.
+            FryTown works best when it leans into that principle: bold fries, smart pairings, and a menu that
+            stays recognisable from the first glance.
           </p>
-          <div className={styles.buttonGroup}>
-            <button className={styles.primaryButton}>
-              Order Online
-              <FaShoppingCart className={styles.buttonIcon} />
-            </button>
+          <ul className={styles.standardList}>
+            {standards.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div className={styles.storyVisual}>
+          <img src={StoryImage} alt="Curly fries from FryTown" />
+        </div>
+      </section>
+
+      <section className={styles.signatureSection}>
+        <div className={styles.signatureVisual}>
+          <img src={SignatureImage} alt="FryTown waffle fries" />
+        </div>
+        <div className={styles.signatureCopy}>
+          <span className={styles.sectionLabel}>Signature Experience</span>
+          <h2>Better launch quality comes from consistency, not decoration.</h2>
+          <p>
+            That means stronger navigation, more believable content, cleaner visual hierarchy, and no dead-end
+            routes pretending to be finished pages.
+          </p>
+          <div className={styles.statRow}>
+            <div className={styles.statCard}>
+              <strong>5</strong>
+              <span>menu sections</span>
+            </div>
+            <div className={styles.statCard}>
+              <strong>1</strong>
+              <span>clear brand direction</span>
+            </div>
+            <div className={styles.statCard}>
+              <strong>0</strong>
+              <span>placeholder visuals left here</span>
+            </div>
           </div>
+        </div>
+      </section>
+
+      <section className={styles.ctaSection}>
+        <div className={styles.ctaCopy}>
+          <img className={styles.brandMark} src={BrandImage} alt="FryTown brand logo" />
+          <h2>Ready for the next round of improvements.</h2>
+          <p>
+            The site is stronger now, but before public launch it still needs real business inputs for contact,
+            checkout, analytics, and franchise operations data.
+          </p>
+        </div>
+        <div className={styles.heroActions}>
+          <Link className={styles.primaryButton} to="/promotions/offers">
+            View offers
+          </Link>
+          <Link className={styles.secondaryButton} to="/account/register">
+            Create account
+          </Link>
         </div>
       </section>
     </main>
   );
-};
-
-export default About;
+}

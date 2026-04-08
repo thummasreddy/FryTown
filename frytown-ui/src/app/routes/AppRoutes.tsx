@@ -1,10 +1,9 @@
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
 import Franchising from "../pages/Franchising/Franchising";
 import Promotions from "../pages/Promotions/Promotions";
 import Menu from "../pages/Menu/Menu";
-import Account from "../pages/Account/Account";
 import Login from "../pages/Account/Login";
 import Register from "../pages/Account/Register";
 import ForgotPassword from "../pages/Account/ForgotPassword";
@@ -51,11 +50,13 @@ export default function AppRoutes() {
 
       {/* Account Routes */}
       <Route path="/account" element={<NestedLayout />}>
-        <Route index element={<Account />} />
+        <Route index element={<Navigate to="/account/login" replace />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
       </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

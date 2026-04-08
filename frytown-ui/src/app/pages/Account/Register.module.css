@@ -413,6 +413,27 @@ textarea:focus-visible {
   font-weight: 650;
 }
 
+.statusBox {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.successBox {
+  background: #edfdf2;
+  border: 1px solid #bce6c8;
+  color: #106b2f;
+}
+
+.errorBox {
+  background: #fff5f5;
+  border: 1px solid rgba(229, 62, 62, 0.28);
+  color: rgba(153, 27, 27, 0.95);
+}
+
 /* Submit */
 .submitButton {
   margin-top: 0.6rem;
