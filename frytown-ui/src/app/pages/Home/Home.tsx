@@ -14,17 +14,23 @@ export default function Home() {
       <section className={styles.ctaSection}>
         <div className={`${styles.ctaContent} ${styles.animateFadeInUp}`}>
           <div className={styles.ctaText}>
-            <h2 className={styles.ctaTitle}>JOIN OUR FAMILY</h2>
+            <h2 className={styles.ctaTitle}>FRIES FIRST, FLAVOR FORWARD</h2>
             <p className={styles.ctaSubtitle}>
-              Present FryTown as a sharper, easier-to-scale concept with cleaner storytelling and stronger launch intent.
+              Explore crispy classics, loaded favorites, and easy add-ons built for quick cravings and shareable orders.
             </p>
-            <Link to="/franchising/why" className={styles.ctaButton}>
-              Franchise Now
+            <Link to="/menu/classic" className={styles.ctaButton}>
+              See the Menu
             </Link>
           </div>
           <div className={styles.ctaImageContainer}>
             <div className={styles.mediaCard}>
-              <img className={styles.mediaLogo} src={brandLogo} alt="FryTown brand mark" />
+              <img
+                className={styles.mediaLogo}
+                src={brandLogo}
+                alt="FryTown brand mark"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           </div>
         </div>
@@ -33,17 +39,23 @@ export default function Home() {
       <section className={`${styles.ctaSection} ${styles.altSection}`}>
         <div className={`${styles.ctaContent} ${styles.reverse} ${styles.animateFadeInUp}`}>
           <div className={styles.ctaText}>
-            <h2 className={styles.ctaTitle}>SHAKE UP YOUR TASTEBUDS</h2>
+            <h2 className={styles.ctaTitle}>BRING FRYTOWN TO YOUR CITY</h2>
             <p className={styles.ctaSubtitle}>
-              Discover the improved menu flow across classics, specialty fries, add-ons, and promotions.
+              Review the concept, guest appeal, and early partnership details if you are exploring future locations.
             </p>
-            <Link to="/menu/classic" className={styles.ctaButton}>
-              Order Now
+            <Link to="/franchising/why" className={styles.ctaButton}>
+              Explore Franchising
             </Link>
           </div>
           <div className={styles.ctaImageContainer}>
             <div className={styles.mediaCard}>
-              <img className={styles.mediaImage} src={waffleFries} alt="FryTown waffle fries" />
+              <img
+                className={styles.mediaImage}
+                src={waffleFries}
+                alt="FryTown waffle fries"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           </div>
         </div>

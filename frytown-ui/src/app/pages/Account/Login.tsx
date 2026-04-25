@@ -1,71 +1,48 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaEnvelope, FaLock, FaArrowRight, FaGoogle, FaFacebook, FaCheckCircle } from 'react-icons/fa';
+import { FaArrowRight, FaCheckCircle } from 'react-icons/fa';
 import styles from './Register.module.css';
 
+const LAUNCH_INTEREST_STORAGE_KEY = 'frytown-launch-interest-v1';
+
 export default function Login() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    rememberMe: false,
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = event.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
-  };
-
-  const validateForm = () => {
-    const nextErrors: Record<string, string> = {};
-
-    if (!formData.email) nextErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) nextErrors.email = 'Please enter a valid email address';
-
-    if (!formData.password) nextErrors.password = 'Password is required';
-    else if (formData.password.length < 6) nextErrors.password = 'Password must be at least 6 characters';
-
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
-  };
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!validateForm()) return;
-
-    setIsSubmitting(true);
-    try {
-      console.log('Login data:', formData);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (error) {
-      console.error('Login failed:', error);
-      setErrors({
-        ...errors,
-        submit: 'Invalid email or password. Please try again.',
-      });
-    } finally {
-      setIsSubmitting(false);
+  const [savedName] = useState(() => {
+    if (typeof window === 'undefined') {
+      return '';
     }
-  };
+
+    try {
+      const rawValue = window.localStorage.getItem(LAUNCH_INTEREST_STORAGE_KEY);
+
+      if (!rawValue) {
+        return '';
+      }
+
+      const parsedValue = JSON.parse(rawValue);
+
+      if (typeof parsedValue?.fullName === 'string') {
+        return parsedValue.fullName;
+      }
+    } catch {
+      // Ignore storage read failures and keep the page usable.
+    }
+
+    return '';
+  });
 
   return (
     <main className={styles.registerContainer}>
       <section className={styles.leftSection} aria-hidden="true">
         <div className={styles.heroInner}>
-          <h2 className={styles.heroTitle}>Welcome Back</h2>
+          <h2 className={styles.heroTitle}>Member Accounts Are Almost Ready</h2>
           <p className={styles.heroSubtitle}>
-            Sign in to access your account, track orders, and enjoy exclusive member benefits.
+            We are still finishing the live sign-in flow for saved carts, launch offers, and faster checkout.
           </p>
 
           <ul className={styles.heroList}>
-            <li><FaCheckCircle /> Track your orders in real time</li>
-            <li><FaCheckCircle /> Save your favorite menu items</li>
-            <li><FaCheckCircle /> Get personalized offers and rewards</li>
+            <li><FaCheckCircle /> Save favorites and addresses once accounts launch</li>
+            <li><FaCheckCircle /> Unlock launch-only offers and rewards</li>
+            <li><FaCheckCircle /> Move from cart to checkout faster</li>
           </ul>
 
           <div className={styles.heroGlow} />
@@ -75,79 +52,35 @@ export default function Login() {
       <section className={styles.rightSection}>
         <div className={styles.registerCard}>
           <div className={styles.registerHeader}>
-            <h1>Login to FryTown</h1>
+            <h1>Member Sign-In Coming Soon</h1>
+            <p>Use the launch updates page to stay in the loop while online accounts are still in preview.</p>
           </div>
 
-          <div className={styles.socialAuth}>
-            <button type="button" className={`${styles.socialButton} ${styles.googleButton}`}>
-              <FaGoogle /> Continue with Google
-            </button>
-            <button type="button" className={`${styles.socialButton} ${styles.facebookButton}`}>
-              <FaFacebook /> Continue with Facebook
-            </button>
+          <div className={`${styles.statusBox} ${styles.previewNote}`}>
+            Online sign-in is not live yet. For now, you can browse the menu, save your cart in this browser, and join launch updates.
           </div>
 
-          <div className={styles.divider}><span>or</span></div>
-
-          <form onSubmit={handleSubmit} className={styles.registerForm}>
-            {errors.submit && <div className={styles.errorBox}>{errors.submit}</div>}
-
-            <div className={styles.formGroup}>
-              <div className={styles.inputContainer}>
-                <FaEnvelope className={styles.inputIcon} />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Email Address *"
-                  className={`${styles.inputField} ${errors.email ? styles.inputError : ''}`}
-                  autoComplete="username"
-                />
-              </div>
-              {errors.email && <span className={styles.errorText}>{errors.email}</span>}
+          {savedName && (
+            <div className={`${styles.statusBox} ${styles.successBox}`}>
+              {savedName}, you are already saved for launch updates in this browser.
             </div>
+          )}
 
-            <div className={styles.formGroup}>
-              <div className={styles.inputContainer}>
-                <FaLock className={styles.inputIcon} />
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Password *"
-                  className={`${styles.inputField} ${errors.password ? styles.inputError : ''}`}
-                  autoComplete="current-password"
-                />
-              </div>
-              {errors.password && <span className={styles.errorText}>{errors.password}</span>}
-              <div className={styles.rememberForgot}>
-                <label className={styles.checkboxContainer}>
-                  <input
-                    type="checkbox"
-                    name="rememberMe"
-                    checked={formData.rememberMe}
-                    onChange={handleChange}
-                    className={styles.checkboxInput}
-                  />
-                  <span className={styles.checkboxCustom}></span>
-                  Remember me
-                </label>
-                <Link to="/account/forgot-password" className={styles.forgotPassword}>
-                  Forgot password?
-                </Link>
-              </div>
-            </div>
-
-            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-              {isSubmitting ? 'Signing in...' : 'Sign In'}
+          <div className={styles.actionStack}>
+            <Link to="/account/register" className={styles.submitButton}>
+              Join Launch Updates
               <FaArrowRight className={styles.buttonIcon} />
-            </button>
-          </form>
+            </Link>
+            <Link to="/menu/classic" className={styles.secondaryAction}>
+              Browse the Menu
+            </Link>
+            <Link to="/account/forgot-password" className={styles.secondaryAction}>
+              Password Reset Preview
+            </Link>
+          </div>
 
           <div className={styles.loginLink}>
-            Don't have an account? <Link to="/account/register">Sign up</Link>
+            Want the live sign-in flow first? <Link to="/account/register">Leave your details here</Link>
           </div>
         </div>
       </section>

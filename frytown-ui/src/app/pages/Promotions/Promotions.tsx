@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/useCart';
 import OriginalFries from '../../assets/Original_French_Fries.png';
@@ -10,12 +9,6 @@ import CheeseDip from '../../assets/Cheese Dip.png';
 import styles from './Promotions.module.css';
 
 type PromoTab = 'combos' | 'offers';
-
-interface CountdownTimer {
-  hours: number;
-  minutes: number;
-  seconds: number;
-}
 
 interface PromoCard {
   id: string;
@@ -113,32 +106,6 @@ export default function Promotions({ initialTab = 'combos' }: PromotionsProps) {
   const navigate = useNavigate();
   const { addItem } = useCart();
   const activeTab = getPromoTabFromPath(location.pathname) ?? initialTab;
-  const [countdown, setCountdown] = useState<CountdownTimer>({
-    hours: 23,
-    minutes: 59,
-    seconds: 59,
-  });
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setCountdown((prev) => {
-        const totalSeconds = prev.hours * 3600 + prev.minutes * 60 + prev.seconds;
-
-        if (totalSeconds <= 0) {
-          return { hours: 23, minutes: 59, seconds: 59 };
-        }
-
-        const nextTotal = totalSeconds - 1;
-        return {
-          hours: Math.floor(nextTotal / 3600),
-          minutes: Math.floor((nextTotal % 3600) / 60),
-          seconds: nextTotal % 60,
-        };
-      });
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, []);
 
   const handleTabChange = (tab: PromoTab) => {
     navigate(`/promotions/${tab}`);
@@ -155,16 +122,19 @@ export default function Promotions({ initialTab = 'combos' }: PromotionsProps) {
   };
 
   const cards = activeTab === 'combos' ? comboCards : offerCards;
+  const guideTags =
+    activeTab === 'combos'
+      ? ['Sharing', 'Lunch', 'Groups']
+      : ['Add-ons', 'Dip pairs', 'Quick wins'];
 
   return (
     <main className={styles.page}>
       <section className={styles.hero}>
         <div className={styles.heroCopy}>
-          <span className={styles.badge}>Launch Offers</span>
-          <h1 className={styles.heroTitle}>Promotions built for quick decisions and higher basket size.</h1>
+          <span className={styles.badge}>Current Offers</span>
+          <h1 className={styles.heroTitle}>FryTown bundles built for quick choices and easy add-ons.</h1>
           <p className={styles.heroText}>
-            Bundle high-performing fries, beverages, and dips into clear offers that feel premium without
-            looking gimmicky.
+            Pick a combo when you want the fast answer, or add a drink or dip offer when you want to round out the order.
           </p>
           <div className={styles.heroMeta}>
             <div className={styles.heroStat}>
@@ -172,12 +142,12 @@ export default function Promotions({ initialTab = 'combos' }: PromotionsProps) {
               <span>featured bundles</span>
             </div>
             <div className={styles.heroStat}>
-              <strong>Daily</strong>
-              <span>offer rotation</span>
+              <strong>Shareable</strong>
+              <span>combo options</span>
             </div>
             <div className={styles.heroStat}>
-              <strong>Fast</strong>
-              <span>cart-ready pricing</span>
+              <strong>Easy</strong>
+              <span>add-on wins</span>
             </div>
           </div>
         </div>
@@ -203,19 +173,19 @@ export default function Promotions({ initialTab = 'combos' }: PromotionsProps) {
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <div>
-            <h2>{activeTab === 'combos' ? 'Featured combos' : 'Short-window offers'}</h2>
+            <h2>{activeTab === 'combos' ? 'Featured combos' : 'Add-on offers'}</h2>
             <p className={styles.intro}>
               {activeTab === 'combos'
-                ? 'These bundles are positioned for group ordering, lunch rush, and family purchase intent.'
-                : 'These promotions are designed to lift average order value without slowing checkout.'}
+                ? 'Good for lunch runs, family sharing, and one-click ordering when you want the easy answer.'
+                : 'Small upgrades that make carts feel more complete without overthinking the order.'}
             </p>
           </div>
           <div className={styles.countdown}>
-            <span className={styles.countdownLabel}>Offer refresh in</span>
+            <span className={styles.countdownLabel}>Good for</span>
             <div className={styles.countdownValues}>
-              <span>{String(countdown.hours).padStart(2, '0')}h</span>
-              <span>{String(countdown.minutes).padStart(2, '0')}m</span>
-              <span>{String(countdown.seconds).padStart(2, '0')}s</span>
+              {guideTags.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
             </div>
           </div>
         </div>
@@ -225,7 +195,13 @@ export default function Promotions({ initialTab = 'combos' }: PromotionsProps) {
             <article key={card.id} className={styles.card}>
               <div className={styles.cardImageWrap}>
                 <span className={styles.cardTag}>{card.badge}</span>
-                <img className={styles.cardImage} src={card.image} alt={card.name} />
+                <img
+                  className={styles.cardImage}
+                  src={card.image}
+                  alt={card.name}
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               <div className={styles.cardBody}>
                 <h3 className={styles.cardTitle}>{card.name}</h3>
@@ -246,11 +222,11 @@ export default function Promotions({ initialTab = 'combos' }: PromotionsProps) {
       </section>
 
       <aside className={styles.highlightPanel}>
-        <h2>What still needs product work before launch</h2>
+        <h2>Why guests like these deals</h2>
         <ul className={styles.highlightList}>
-          <li>Promotion eligibility rules should eventually come from CMS or backend data instead of hardcoded copy.</li>
-          <li>Checkout needs a real promo application flow so pricing logic stays consistent across cart and payment.</li>
-          <li>Analytics events should be added for promo impressions, clicks, and cart conversions.</li>
+          <li>They pair popular fries with obvious drink and dip add-ons.</li>
+          <li>They make group orders easier when nobody wants to build from scratch.</li>
+          <li>They keep the ordering decision quick without making the menu feel limited.</li>
         </ul>
       </aside>
     </main>

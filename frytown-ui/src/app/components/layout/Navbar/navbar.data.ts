@@ -40,8 +40,8 @@ export const NAV_ITEMS: NavGroup[] = [
     label: "Account",
     to: "/account",
     children: [
-      { label: "Login", to: "/account/login" },
-      { label: "Register", to: "/account/register" },
+      { label: "Member Preview", to: "/account/login" },
+      { label: "Launch Updates", to: "/account/register" },
     ],
   },
 ];

@@ -3,9 +3,9 @@ import styles from './Footer.module.css';
 import logo from '../../../assets/Brand_FryTown.png';
 
 const actionLinks = [
-  { name: 'Order Menu', to: '/menu/classic' },
+  { name: 'See the Menu', to: '/menu/classic' },
   { name: 'Build Your Fries', to: '/menu/build-your-fries' },
-  { name: 'Launch Offers', to: '/promotions/offers' },
+  { name: 'View Offers', to: '/promotions/offers' },
 ];
 
 const footerLinks = [
@@ -19,21 +19,21 @@ const footerLinks = [
     ],
   },
   {
-    title: 'Brand',
+    title: 'Explore',
     links: [
       { name: 'About Us', to: '/about' },
       { name: 'Promotions', to: '/promotions/combos' },
       { name: 'Franchising', to: '/franchising/why' },
-      { name: 'Account', to: '/account/register' },
+      { name: 'Launch Updates', to: '/account/register' },
     ],
   },
   {
-    title: 'Launch Notes',
+    title: 'Plan Ahead',
     links: [
-      { name: 'Menu Structure', to: '/menu/classic' },
-      { name: 'Offer Design', to: '/promotions/offers' },
-      { name: 'Franchise Inquiry', to: '/franchising/apply' },
-      { name: 'Register Interest', to: '/account/register' },
+      { name: 'Build Your Fries', to: '/menu/build-your-fries' },
+      { name: 'Current Offers', to: '/promotions/offers' },
+      { name: 'Member Preview', to: '/account/login' },
+      { name: 'Franchise Info', to: '/franchising/apply' },
     ],
   },
 ];
@@ -44,10 +44,16 @@ export default function Footer() {
       <div className={styles.footerContainer}>
         <div className={styles.logoSection}>
           <Link to="/" className={styles.logo} aria-label="FryTown Home">
-            <img src={logo} alt="FryTown Logo" className={styles.logoImage} />
+            <img
+              src={logo}
+              alt="FryTown Logo"
+              className={styles.logoImage}
+              loading="lazy"
+              decoding="async"
+            />
           </Link>
           <p className={styles.slogan}>
-            A fries-first brand with clearer navigation, stronger positioning, and a more launch-ready presentation.
+            Crispy fries, bold flavors, and easy add-ons for snack runs, combo meals, and shareable cravings.
           </p>
           <div className={styles.socialIcons}>
             {actionLinks.map((link) => (

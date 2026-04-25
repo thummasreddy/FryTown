@@ -471,7 +471,13 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
                   className={`${styles.optionButton} ${customization.size === size.name ? styles.selected : ''}`}
                   onClick={() => handleSizeSelect(size.name)}
                 >
-                  <img className={styles.optionImage} src={sizeImages[size.name] ?? OriginalFries} alt={size.name} />
+                  <img
+                    className={styles.optionImage}
+                    src={sizeImages[size.name] ?? OriginalFries}
+                    alt={size.name}
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <span className={styles.optionName}>{size.name}</span>
                   <span className={styles.optionPrice}>{formatPrice(size.price)}</span>
                   {size.name.includes('Best Seller') && <span className={styles.bestSellerBadge}>Best Seller</span>}
@@ -490,7 +496,13 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
                   className={`${styles.optionButton} ${customization.style === style.name ? styles.selected : ''}`}
                   onClick={() => handleStyleSelect(style.name)}
                 >
-                  <img className={styles.optionImage} src={styleImages[style.name] ?? OriginalFries} alt={style.name} />
+                  <img
+                    className={styles.optionImage}
+                    src={styleImages[style.name] ?? OriginalFries}
+                    alt={style.name}
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <span className={styles.optionName}>{style.name}</span>
                   {style.additionalPrice && (
                     <span className={styles.additionalPrice}>+{formatPrice(style.additionalPrice)}</span>
@@ -588,7 +600,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
     items.map((item) => (
       <div key={item.id} className={styles.menuItem}>
         <div className={styles.itemImage}>
-          <img src={item.image} alt={item.name} />
+          <img src={item.image} alt={item.name} loading="lazy" decoding="async" />
           <div className={styles.badgesContainer}>
             {item.popular && <span className={`${styles.badge} ${styles.popular}`}>Popular</span>}
             {item.spicy && <span className={`${styles.badge} ${styles.spicy}`}>Spicy</span>}

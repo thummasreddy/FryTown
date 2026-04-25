@@ -434,6 +434,12 @@ textarea:focus-visible {
   color: rgba(153, 27, 27, 0.95);
 }
 
+.previewNote {
+  background: #fff7eb;
+  border: 1px solid rgba(252, 172, 0, 0.28);
+  color: #7c4a02;
+}
+
 /* Submit */
 .submitButton {
   margin-top: 0.6rem;
@@ -484,6 +490,33 @@ textarea:focus-visible {
 
 .buttonIcon {
   transform: translateY(1px);
+}
+
+.actionStack {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.secondaryAction {
+  width: 100%;
+  min-height: 52px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-white);
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.secondaryAction:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  color: var(--primary);
+  border-color: rgba(252, 172, 0, 0.35);
 }
 
 /* Footer link */

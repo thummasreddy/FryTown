@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import type { ReactNode } from 'react';
 import { CartContext } from './cartStore';
 
@@ -28,80 +28,123 @@ type CartAction =
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' };
 
+const CART_STORAGE_KEY = 'frytown-cart-v1';
+
 const initialState: CartState = {
   items: [],
   total: 0,
   itemCount: 0,
 };
 
+function buildCartState(items: CartItem[]): CartState {
+  return {
+    items,
+    total: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    itemCount: items.reduce((sum, item) => sum + item.quantity, 0),
+  };
+}
+
+function readStoredCart(): CartState {
+  if (typeof window === 'undefined') {
+    return initialState;
+  }
+
+  try {
+    const rawCart = window.localStorage.getItem(CART_STORAGE_KEY);
+
+    if (!rawCart) {
+      return initialState;
+    }
+
+    const parsedCart = JSON.parse(rawCart);
+
+    if (!Array.isArray(parsedCart)) {
+      return initialState;
+    }
+
+    const items = parsedCart
+      .filter(
+        (item): item is CartItem =>
+          typeof item?.id === 'string' &&
+          typeof item?.name === 'string' &&
+          typeof item?.price === 'number' &&
+          Number.isFinite(item.price) &&
+          typeof item?.quantity === 'number' &&
+          Number.isFinite(item.quantity) &&
+          item.quantity > 0 &&
+          (item?.type === 'custom' || item?.type === 'regular')
+      )
+      .map((item) => ({
+        ...item,
+        quantity: Math.max(1, Math.trunc(item.quantity)),
+        image: typeof item.image === 'string' ? item.image : undefined,
+        customizations: item.customizations
+          ? {
+              size:
+                typeof item.customizations.size === 'string'
+                  ? item.customizations.size
+                  : undefined,
+              style:
+                typeof item.customizations.style === 'string'
+                  ? item.customizations.style
+                  : undefined,
+              flavors: Array.isArray(item.customizations.flavors)
+                ? item.customizations.flavors.filter(
+                    (flavor): flavor is string => typeof flavor === 'string'
+                  )
+                : undefined,
+            }
+          : undefined,
+      }));
+
+    return buildCartState(items);
+  } catch {
+    return initialState;
+  }
+}
+
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      
+      const existingItem = state.items.find((item) => item.id === action.payload.id);
+
       if (existingItem) {
-        // If item exists, increase quantity
-        const updatedItems = state.items.map(item =>
+        const updatedItems = state.items.map((item) =>
           item.id === action.payload.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
-        
-        return {
-          ...state,
-          items: updatedItems,
-          total: state.total + action.payload.price,
-          itemCount: state.itemCount + 1,
-        };
-      } else {
-        // Add new item
-        const newItems = [...state.items, { ...action.payload, quantity: 1 }];
-        
-        return {
-          ...state,
-          items: newItems,
-          total: state.total + action.payload.price,
-          itemCount: state.itemCount + 1,
-        };
+
+        return buildCartState(updatedItems);
       }
+
+      return buildCartState([...state.items, { ...action.payload, quantity: 1 }]);
     }
-    
+
     case 'REMOVE_ITEM': {
-      const itemToRemove = state.items.find(item => item.id === action.payload);
-      if (!itemToRemove) return state;
-      
-      const newItems = state.items.filter(item => item.id !== action.payload);
-      
-      return {
-        ...state,
-        items: newItems,
-        total: state.total - (itemToRemove.price * itemToRemove.quantity),
-        itemCount: state.itemCount - itemToRemove.quantity,
-      };
+      const newItems = state.items.filter((item) => item.id !== action.payload);
+      return buildCartState(newItems);
     }
-    
+
     case 'UPDATE_QUANTITY': {
-      const item = state.items.find(item => item.id === action.payload.id);
-      if (!item) return state;
-      
-      const quantityDiff = action.payload.quantity - item.quantity;
-      const newItems = state.items.map(item =>
-        item.id === action.payload.id
-          ? { ...item, quantity: action.payload.quantity }
-          : item
+      const item = state.items.find((entry) => entry.id === action.payload.id);
+
+      if (!item) {
+        return state;
+      }
+
+      const newItems = state.items.map((entry) =>
+        entry.id === action.payload.id
+          ? { ...entry, quantity: action.payload.quantity }
+          : entry
       );
-      
-      return {
-        ...state,
-        items: newItems,
-        total: state.total + (item.price * quantityDiff),
-        itemCount: state.itemCount + quantityDiff,
-      };
+
+      return buildCartState(newItems);
     }
-    
+
     case 'CLEAR_CART':
       return initialState;
-      
+
     default:
       return state;
   }
@@ -116,7 +159,15 @@ export interface CartContextType {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, dispatch] = useReducer(cartReducer, initialState);
+  const [cart, dispatch] = useReducer(cartReducer, initialState, readStoredCart);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart.items));
+    } catch {
+      // Ignore storage write failures and keep the in-memory cart available.
+    }
+  }, [cart.items]);
 
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
     dispatch({ type: 'ADD_ITEM', payload: item });
@@ -139,13 +190,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <CartContext.Provider value={{
-      cart,
-      addItem,
-      removeItem,
-      updateQuantity,
-      clearCart,
-    }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addItem,
+        removeItem,
+        updateQuantity,
+        clearCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

@@ -6,27 +6,30 @@ import styles from '../../../app/pages/Home/Home.module.css';
 const slides = [
   {
     id: 1,
-    title: 'Signature Fries, Better Presented',
-    subtitle: 'Guide guests into the strongest menu section instead of generic hero copy.',
+    title: 'Crispy Classics, Done Right',
+    subtitle: 'Start with the signatures: classic fries, curly fries, waffle cuts, and craveable sides.',
     cta: 'Explore Classics',
     ctaLink: '/menu/classic',
     image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+    alt: 'Golden fries served hot and ready',
   },
   {
     id: 2,
-    title: 'Build Your Own Box',
-    subtitle: 'The configurator now routes correctly and supports a cleaner cart journey.',
-    cta: 'Build Now',
+    title: 'Build Your Perfect Fry Box',
+    subtitle: 'Pick your size, choose your fry style, and finish with one or two bold flavors.',
+    cta: 'Build Your Box',
     ctaLink: '/menu/build-your-fries',
     image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2080&q=80',
+    alt: 'Loaded fries styled as a customizable meal',
   },
   {
     id: 3,
-    title: 'Launch Offers That Convert',
-    subtitle: 'Promotions now point to working routes with more credible launch-ready content.',
+    title: 'Combos Worth Sharing',
+    subtitle: 'Mix fries, drinks, and dips into easy bundles for lunch breaks, snack runs, and group orders.',
     cta: 'View Offers',
     ctaLink: '/promotions/offers',
     image: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+    alt: 'A tray of shareable snacks and drinks',
   },
 ];
 
@@ -60,7 +63,7 @@ export function HeroCarousel() {
   return (
     <section
       className={styles.heroCarousel}
-      aria-label="Featured promotions"
+      aria-label="Featured FryTown highlights"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -70,8 +73,15 @@ export function HeroCarousel() {
             key={slide.id}
             className={`${styles.heroSlide} ${index === currentSlide ? styles.active : ''}`}
             aria-hidden={index !== currentSlide}
-            style={{ backgroundImage: `url(${slide.image})` }}
           >
+            <img
+              className={styles.heroSlideImage}
+              src={slide.image}
+              alt={slide.alt}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchPriority={index === 0 ? 'high' : 'auto'}
+            />
             <div className={styles.heroSlideContent}>
               <h1 className={styles.heroSlideTitle}>{slide.title}</h1>
               <p className={styles.heroSlideSubtitle}>{slide.subtitle}</p>

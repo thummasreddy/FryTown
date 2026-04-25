@@ -204,6 +204,17 @@
   font-weight: 600;
 }
 
+.noticeBanner {
+  display: inline-flex;
+  margin-top: 0.25rem;
+  padding: 0.85rem 1rem;
+  background: #fff7eb;
+  color: #7c4a02;
+  border: 1px solid rgba(252, 172, 0, 0.28);
+  border-radius: 16px;
+  font-weight: 600;
+}
+
 @media (max-width: 900px) {
   .contentGrid,
   .cardGrid,

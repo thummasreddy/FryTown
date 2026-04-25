@@ -576,8 +576,7 @@
     rgba(192, 0, 0, 0.95) 0%, 
     rgba(150, 0, 0, 0.9) 50%,
     rgba(192, 0, 0, 0.85) 100%
-  ),
-  url('/assets/Brand_FryTown.png') center/cover no-repeat;
+  );
   background-attachment: fixed;
   overflow: hidden;
 }

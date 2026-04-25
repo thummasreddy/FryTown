@@ -30,7 +30,7 @@ export default function Cart() {
 
   const handleCheckout = () => {
     setIsOpen(false);
-    navigate('/account/register');
+    navigate('/account/register', { state: { fromCart: true } });
   };
 
   const tax = Math.round(Number(cart.total) * 0.18);
@@ -84,7 +84,16 @@ export default function Cart() {
               <div className={styles.cartItems}>
                 {cart.items.map((item) => (
                   <div key={item.id} className={styles.cartItem}>
-                    <div className={styles.itemImage}>{item.image && <img src={item.image} alt={item.name} />}</div>
+                    <div className={styles.itemImage}>
+                      {item.image && (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      )}
+                    </div>
 
                     <div className={styles.itemDetails}>
                       <h4 className={styles.itemName}>{item.name}</h4>
@@ -159,12 +168,17 @@ export default function Cart() {
                   </div>
                 </div>
 
+                <div className={styles.cartNotice}>
+                  <strong>Order preview only.</strong>
+                  <span>Online checkout opens soon, but your cart now stays saved in this browser.</span>
+                </div>
+
                 <div className={styles.cartActions}>
                   <button className={styles.clearButton} onClick={handleClearCart} type="button">
                     Clear Cart
                   </button>
                   <button className={styles.checkoutButton} onClick={handleCheckout} type="button">
-                    Continue to Checkout
+                    Get Launch Updates
                   </button>
                 </div>
               </div>

@@ -8,24 +8,24 @@ import styles from './About.module.css';
 
 const highlights = [
   {
-    title: 'Focused menu',
-    description: 'A concise fries-first menu makes the brand easy to understand and easy to order from.',
+    title: 'Easy to order',
+    description: 'A focused menu keeps first visits simple while still giving regulars plenty of variety.',
   },
   {
-    title: 'Strong visual identity',
-    description: 'The brand now leans into a clearer premium-fast-casual presentation instead of generic food-site patterns.',
+    title: 'Built for mix-and-match cravings',
+    description: 'Fries, dips, drinks, and specialty trays work together naturally for solo orders and group bundles.',
   },
   {
-    title: 'Launch-ready storytelling',
-    description: 'The page speaks to guests, partners, and operators without broken imagery or filler copy.',
+    title: 'Memorable by design',
+    description: 'From the name to the visuals, FryTown aims to feel playful, bold, and instantly recognizable.',
   },
 ];
 
 const standards = [
-  'Crisp-first fry prep and fast assembly',
-  'Sauce pairings and beverage add-ons built for upsell',
-  'Consistent packaging, signage, and menu naming',
-  'A tighter brand voice across every public page',
+  'Classic fries, curly fries, wedges, tots, sweet potato fries, and waffle cuts',
+  'Dip pairings and drinks that make add-ons feel easy',
+  'Menu names and categories guests can scan quickly',
+  'A warm brand style built around comfort, crunch, and color',
 ];
 
 export default function About() {
@@ -39,10 +39,9 @@ export default function About() {
           transition={{ duration: 0.6 }}
         >
           <span className={styles.eyebrow}>About FryTown</span>
-          <h1>Built around one idea: fries should feel memorable, not generic.</h1>
+          <h1>A fries-first brand built for quick cravings and repeat visits.</h1>
           <p>
-            FryTown is positioned as a specialist concept with stronger visual identity, tighter messaging,
-            and a menu structure that is easier to scale and easier to buy from.
+            FryTown keeps the menu focused on crispy favorites, loaded upgrades, and easy add-ons so the experience feels simple from the first click.
           </p>
           <div className={styles.heroActions}>
             <Link className={styles.primaryButton} to="/menu/classic">
@@ -60,17 +59,22 @@ export default function About() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <img src={HeroImage} alt="FryTown classic fries" />
+          <img
+            src={HeroImage}
+            alt="FryTown classic fries"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+          />
         </motion.div>
       </section>
 
       <section className={styles.section}>
         <div className={styles.sectionIntro}>
-          <span className={styles.sectionLabel}>What Changed</span>
-          <h2>The site now presents a more disciplined brand story.</h2>
+          <span className={styles.sectionLabel}>Why FryTown</span>
+          <h2>A focused menu leaves more room for flavor.</h2>
           <p>
-            The earlier version mixed placeholder visuals, inconsistent messaging, and broken assets. This page
-            now frames FryTown with clearer positioning and a more credible launch narrative.
+            Instead of trying to do everything, FryTown leans into the combinations guests reach for most: crisp fries, bold toppings, easy dips, and drinks that round out the order.
           </p>
         </div>
 
@@ -93,12 +97,10 @@ export default function About() {
 
       <section className={styles.storySection}>
         <div className={styles.storyText}>
-          <span className={styles.sectionLabel}>Brand Story</span>
-          <h2>A fries-first concept with sharper commercial potential.</h2>
+          <span className={styles.sectionLabel}>Our Approach</span>
+          <h2>One category, plenty of ways to crave it.</h2>
           <p>
-            The strongest restaurant brands usually win by doing a small number of things extremely well.
-            FryTown works best when it leans into that principle: bold fries, smart pairings, and a menu that
-            stays recognisable from the first glance.
+            FryTown works best when every part of the menu supports the same idea: hot fries, easy pairings, and just enough variety to keep the experience fun without making it confusing.
           </p>
           <ul className={styles.standardList}>
             {standards.map((item) => (
@@ -107,20 +109,29 @@ export default function About() {
           </ul>
         </div>
         <div className={styles.storyVisual}>
-          <img src={StoryImage} alt="Curly fries from FryTown" />
+          <img
+            src={StoryImage}
+            alt="Curly fries from FryTown"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       </section>
 
       <section className={styles.signatureSection}>
         <div className={styles.signatureVisual}>
-          <img src={SignatureImage} alt="FryTown waffle fries" />
+          <img
+            src={SignatureImage}
+            alt="FryTown waffle fries"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         <div className={styles.signatureCopy}>
-          <span className={styles.sectionLabel}>Signature Experience</span>
-          <h2>Better launch quality comes from consistency, not decoration.</h2>
+          <span className={styles.sectionLabel}>What You Can Expect</span>
+          <h2>Fast decisions, strong flavors, and plenty of variety.</h2>
           <p>
-            That means stronger navigation, more believable content, cleaner visual hierarchy, and no dead-end
-            routes pretending to be finished pages.
+            Whether you are ordering for one or building a shareable combo, FryTown is designed to feel clear, upbeat, and satisfying from the hero section to the final add-on.
           </p>
           <div className={styles.statRow}>
             <div className={styles.statCard}>
@@ -128,12 +139,12 @@ export default function About() {
               <span>menu sections</span>
             </div>
             <div className={styles.statCard}>
-              <strong>1</strong>
-              <span>clear brand direction</span>
+              <strong>7</strong>
+              <span>fry styles</span>
             </div>
             <div className={styles.statCard}>
-              <strong>0</strong>
-              <span>placeholder visuals left here</span>
+              <strong>6</strong>
+              <span>signature dips</span>
             </div>
           </div>
         </div>
@@ -141,11 +152,16 @@ export default function About() {
 
       <section className={styles.ctaSection}>
         <div className={styles.ctaCopy}>
-          <img className={styles.brandMark} src={BrandImage} alt="FryTown brand logo" />
-          <h2>Ready for the next round of improvements.</h2>
+          <img
+            className={styles.brandMark}
+            src={BrandImage}
+            alt="FryTown brand logo"
+            loading="lazy"
+            decoding="async"
+          />
+          <h2>Ready to plan your FryTown run?</h2>
           <p>
-            The site is stronger now, but before public launch it still needs real business inputs for contact,
-            checkout, analytics, and franchise operations data.
+            Start with the menu, build your own box, or check the latest bundles while online ordering moves toward launch.
           </p>
         </div>
         <div className={styles.heroActions}>
@@ -153,7 +169,7 @@ export default function About() {
             View offers
           </Link>
           <Link className={styles.secondaryButton} to="/account/register">
-            Create account
+            Join launch updates
           </Link>
         </div>
       </section>

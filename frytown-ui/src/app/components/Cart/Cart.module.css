@@ -323,6 +323,31 @@
   gap: 0.75rem;
 }
 
+.cartNotice {
+  margin-bottom: 1rem;
+  border: 1px solid rgba(252, 172, 0, 0.3);
+  border-radius: 16px;
+  background: #fff7eb;
+  padding: 0.85rem 1rem;
+}
+
+.cartNotice strong,
+.cartNotice span {
+  display: block;
+}
+
+.cartNotice strong {
+  color: #8c5b00;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.cartNotice span {
+  color: var(--text-main);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
 .clearButton {
   flex: 1;
   background: var(--bg-white);
