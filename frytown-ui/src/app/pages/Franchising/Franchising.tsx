@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { frytownApi } from '../../api/frytownApi';
 import styles from './Franchising.module.css';
 
 type FranchiseTab = 'why' | 'investment' | 'apply';
@@ -9,7 +10,10 @@ type FranchiseLeadForm = {
   name: string;
   email: string;
   phone: string;
-  location: string;
+  city: string;
+  state: string;
+  investment: string;
+  experience: string;
   message: string;
 };
 
@@ -23,7 +27,10 @@ const emptyFranchiseLead: FranchiseLeadForm = {
   name: '',
   email: '',
   phone: '',
-  location: '',
+  city: '',
+  state: '',
+  investment: '',
+  experience: '',
   message: '',
 };
 
@@ -55,7 +62,10 @@ function readStoredLead(): FranchiseLeadForm {
       name: typeof parsedValue?.name === 'string' ? parsedValue.name : '',
       email: typeof parsedValue?.email === 'string' ? parsedValue.email : '',
       phone: typeof parsedValue?.phone === 'string' ? parsedValue.phone : '',
-      location: typeof parsedValue?.location === 'string' ? parsedValue.location : '',
+      city: typeof parsedValue?.city === 'string' ? parsedValue.city : '',
+      state: typeof parsedValue?.state === 'string' ? parsedValue.state : '',
+      investment: typeof parsedValue?.investment === 'string' ? parsedValue.investment : '',
+      experience: typeof parsedValue?.experience === 'string' ? parsedValue.experience : '',
       message: typeof parsedValue?.message === 'string' ? parsedValue.message : '',
     };
   } catch {
@@ -69,6 +79,7 @@ export default function Franchising({ initialTab = 'why' }: FranchisingProps) {
   const activeTab = getFranchiseTabFromPath(location.pathname) ?? initialTab;
   const [formData, setFormData] = useState<FranchiseLeadForm>(() => readStoredLead());
   const [submitMessage, setSubmitMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleTabChange = (tab: FranchiseTab) => {
     navigate(`/franchising/${tab}`);
@@ -76,22 +87,37 @@ export default function Franchising({ initialTab = 'why' }: FranchisingProps) {
   };
 
   const handleChange = (
-    event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
+    event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage('');
 
     try {
-      window.localStorage.setItem(FRANCHISE_INTEREST_STORAGE_KEY, JSON.stringify(formData));
-      setSubmitMessage(
-        'Thanks. Your franchise interest is saved on this device while the live inquiry flow is still being connected.'
-      );
-    } catch {
-      setSubmitMessage('We could not save your details on this device. Please try again.');
+      await frytownApi.createFranchiseLead({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        city: formData.city.trim(),
+        state: formData.state.trim(),
+        investment: formData.investment,
+        experience: formData.experience,
+        message: formData.message.trim() || undefined,
+      });
+
+      window.localStorage.removeItem(FRANCHISE_INTEREST_STORAGE_KEY);
+      setFormData(emptyFranchiseLead);
+      setSubmitMessage('Thanks. Your franchise inquiry was submitted.');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      setSubmitMessage(message || 'We could not submit your details right now. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -203,10 +229,10 @@ export default function Franchising({ initialTab = 'why' }: FranchisingProps) {
             <div>
               <h2>Raise your hand early</h2>
               <p className={styles.lead}>
-                Share your market and operating background. This preview saves your details in this browser while the live inquiry route is still being connected.
+                Share your market and operating background. The FryTown team will review your inquiry and follow up with next steps.
               </p>
               <div className={styles.noticeBanner}>
-                Franchise applications are still in preview. Use this form to test the experience and keep the details on this device.
+                Franchise applications are open for early partner conversations.
               </div>
               {submitMessage && (
                 <div className={isSuccess ? styles.successBanner : styles.noticeBanner}>
@@ -229,11 +255,35 @@ export default function Franchising({ initialTab = 'why' }: FranchisingProps) {
                 <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
               </label>
               <label className={styles.field}>
-                <span>City or territory of interest</span>
-                <input type="text" name="location" value={formData.location} onChange={handleChange} required />
+                <span>City of interest</span>
+                <input type="text" name="city" value={formData.city} onChange={handleChange} required />
+              </label>
+              <label className={styles.field}>
+                <span>State or region</span>
+                <input type="text" name="state" value={formData.state} onChange={handleChange} required />
+              </label>
+              <label className={styles.field}>
+                <span>Investment range</span>
+                <select name="investment" value={formData.investment} onChange={handleChange} required>
+                  <option value="">Select range</option>
+                  <option value="Under $100k">Under $100k</option>
+                  <option value="$100k-$250k">$100k-$250k</option>
+                  <option value="$250k-$500k">$250k-$500k</option>
+                  <option value="$500k+">$500k+</option>
+                </select>
+              </label>
+              <label className={styles.field}>
+                <span>Operating experience</span>
+                <select name="experience" value={formData.experience} onChange={handleChange} required>
+                  <option value="">Select experience</option>
+                  <option value="First-time owner">First-time owner</option>
+                  <option value="Restaurant operator">Restaurant operator</option>
+                  <option value="Multi-unit operator">Multi-unit operator</option>
+                  <option value="Investor or development group">Investor or development group</option>
+                </select>
               </label>
               <label className={`${styles.field} ${styles.fullWidth}`}>
-                <span>Tell us about your operating background</span>
+                <span>Tell us more</span>
                 <textarea
                   name="message"
                   rows={5}
@@ -242,8 +292,8 @@ export default function Franchising({ initialTab = 'why' }: FranchisingProps) {
                   placeholder="Current business, multi-unit experience, or preferred format."
                 />
               </label>
-              <button type="submit" className={styles.submitButton}>
-                Save Interest
+              <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
               </button>
             </form>
           </div>

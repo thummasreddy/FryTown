@@ -72,6 +72,22 @@ export interface CartQuoteResponse {
   total: number;
 }
 
+export interface FranchiseLeadRequest {
+  name: string;
+  email: string;
+  phone: string;
+  city: string;
+  state: string;
+  investment: string;
+  experience: string;
+  message?: string;
+}
+
+export interface FranchiseLeadResponse extends FranchiseLeadRequest {
+  id: number;
+  createdAt: string;
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
@@ -120,6 +136,11 @@ export const frytownApi = {
     }),
   getCartQuote: (payload: CartQuoteRequest) =>
     request<CartQuoteResponse>('/cart/quote', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  createFranchiseLead: (payload: FranchiseLeadRequest) =>
+    request<FranchiseLeadResponse>('/franchise-leads', {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
