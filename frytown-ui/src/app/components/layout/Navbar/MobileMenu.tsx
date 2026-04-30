@@ -3,12 +3,19 @@ import { FaTimes } from 'react-icons/fa';
 import { NAV_ITEMS } from './navbar.data';
 import styles from './MobileMenu.module.css';
 
+type AuthSession = {
+  name?: string;
+  email?: string;
+};
+
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  authSession: AuthSession | null;
+  onLogout: () => void;
 }
 
-export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+export default function MobileMenu({ isOpen, onClose, authSession, onLogout }: MobileMenuProps) {
   if (!isOpen) return null;
 
   return (
@@ -20,7 +27,12 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         <nav className={styles['mobile-nav']} id="mobile-menu">
           {NAV_ITEMS.map((item) => (
             <div key={item.label} className={styles['nav-group']}>
-              {item.to ? (
+              {item.label === 'Account' && authSession ? (
+                <div className={`${styles['nav-link']} ${styles['main-link']} ${styles['account-summary']}`}>
+                  <span>{authSession.name || 'Signed in'}</span>
+                  {authSession.email && <small>{authSession.email}</small>}
+                </div>
+              ) : item.to ? (
                 <NavLink
                   to={item.to}
                   className={({ isActive }) =>
@@ -33,7 +45,26 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               ) : (
                 <div className={`${styles['nav-link']} ${styles['main-link']}`}>{item.label}</div>
               )}
-              {item.children && (
+              {item.label === 'Account' && authSession ? (
+                <div className={styles['sub-nav']}>
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                      `${styles['nav-link']} ${styles['sub-link']} ${isActive ? styles.active : ''}`
+                    }
+                    onClick={onClose}
+                  >
+                    Home
+                  </NavLink>
+                  <button
+                    type="button"
+                    className={`${styles['nav-link']} ${styles['sub-link']} ${styles['logout-button']}`}
+                    onClick={onLogout}
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : item.children && (
                 <div className={styles['sub-nav']}>
                   {item.children.map((child) => (
                     <NavLink

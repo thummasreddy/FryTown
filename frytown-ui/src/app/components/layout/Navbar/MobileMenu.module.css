@@ -122,6 +122,37 @@
   color: var(--text-white);
 }
 
+.account-summary {
+  cursor: default;
+}
+
+.account-summary:hover {
+  padding-left: 1.5rem;
+  background: transparent;
+  color: var(--text-main);
+}
+
+.account-summary span,
+.account-summary small {
+  display: block;
+}
+
+.account-summary small {
+  margin-top: 0.25rem;
+  color: var(--text-light);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.logout-button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
 /* ===== Animations ===== */
 @keyframes fadeIn {
   from {

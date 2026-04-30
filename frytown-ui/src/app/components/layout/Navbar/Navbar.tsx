@@ -1,11 +1,45 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FaBars, FaChevronDown } from "react-icons/fa";
 import { NAV_ITEMS, type NavGroup } from "./navbar.data";
 import brandLogo from "../../../assets/Brand_FryTown.png";
 import MobileMenu from "./MobileMenu";
 import Cart from "../../Cart/Cart";
 import styles from "./Navbar.module.css";
+
+const AUTH_STORAGE_KEY = "frytown-auth-v1";
+const AUTH_SESSION_CHANGED_EVENT = "frytown-auth-session-changed";
+
+type AuthSession = {
+  id?: number;
+  name?: string;
+  email?: string;
+  token?: string | null;
+};
+
+function readAuthSession(): AuthSession | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    const rawSession = window.localStorage.getItem(AUTH_STORAGE_KEY);
+
+    if (!rawSession) {
+      return null;
+    }
+
+    const parsedSession = JSON.parse(rawSession) as AuthSession;
+
+    if (!parsedSession?.token && !parsedSession?.email) {
+      return null;
+    }
+
+    return parsedSession;
+  } catch {
+    return null;
+  }
+}
 
 const UserIcon = ({ showText = true }: { showText?: boolean }) => (
   <div className={styles.userIconWrapper}>
@@ -46,7 +80,31 @@ function useClickOutside(
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [authSession, setAuthSession] = useState<AuthSession | null>(() => readAuthSession());
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setAuthSession(readAuthSession());
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener(AUTH_SESSION_CHANGED_EVENT, handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(AUTH_SESSION_CHANGED_EVENT, handleStorageChange);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    window.localStorage.removeItem(AUTH_STORAGE_KEY);
+    setAuthSession(null);
+    window.dispatchEvent(new Event(AUTH_SESSION_CHANGED_EVENT));
+    setMobileOpen(false);
+    navigate("/", { replace: true });
+  };
 
   const handleHomeClick = (event: React.MouseEvent) => {
     if (location.pathname !== "/") {
@@ -80,7 +138,12 @@ export default function Navbar() {
         <nav className={styles.navDesktop} aria-label="Primary">
           <ul className={styles.navList}>
             {NAV_ITEMS.map((item) => (
-              <DesktopNavItem key={item.label} item={item} />
+              <DesktopNavItem
+                key={item.label}
+                item={item}
+                authSession={authSession}
+                onLogout={handleLogout}
+              />
             ))}
           </ul>
         </nav>
@@ -88,15 +151,29 @@ export default function Navbar() {
         <Cart />
       </div>
 
-      <MobileMenu isOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileMenu
+        isOpen={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        authSession={authSession}
+        onLogout={handleLogout}
+      />
     </header>
   );
 }
 
-function DesktopNavItem({ item }: { item: NavGroup }) {
+function DesktopNavItem({
+  item,
+  authSession,
+  onLogout,
+}: {
+  item: NavGroup;
+  authSession: AuthSession | null;
+  onLogout: () => void;
+}) {
   const hasChildren = !!item.children?.length;
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLLIElement>(null);
+  const isAccountItem = item.label === "Account";
 
   useClickOutside(wrapRef, () => setOpen(false));
 
@@ -114,13 +191,13 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
       <li className={styles.navItem}>
         <NavLink
           className={({ isActive }) =>
-            `${styles.link} ${isActive ? styles.active : ""} ${item.label === "Account" ? styles.accountLink : ""}`
+            `${styles.link} ${isActive ? styles.active : ""} ${isAccountItem ? styles.accountLink : ""}`
           }
           to={item.to || "#"}
-          aria-label={item.label === "Account" ? "Account" : undefined}
+          aria-label={isAccountItem ? "Account" : undefined}
           end
         >
-          {item.label === "Account" ? <UserIcon showText={false} /> : item.label}
+          {isAccountItem ? <UserIcon showText={false} /> : item.label}
         </NavLink>
       </li>
     );
@@ -131,7 +208,7 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
       <NavLink
         to={item.to || "#"}
         className={({ isActive }) =>
-          `${styles.link} ${styles.linkBtn} ${isActive ? styles.active : ""} ${item.label === "Account" ? styles.accountLink : ""}`
+          `${styles.link} ${styles.linkBtn} ${isActive ? styles.active : ""} ${isAccountItem ? styles.accountLink : ""}`
         }
         aria-haspopup="menu"
         aria-expanded={open}
@@ -140,7 +217,7 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
           setOpen((value) => !value);
         }}
       >
-        {item.label === "Account" ? (
+        {isAccountItem ? (
           <>
             <UserIcon showText={false} />
             <FaChevronDown className={styles.dropdownArrow} aria-hidden="true" />
@@ -155,17 +232,45 @@ function DesktopNavItem({ item }: { item: NavGroup }) {
 
       {open && (
         <div className={styles.dropdown} role="menu" aria-label={`${item.label} submenu`}>
-          {item.children!.map((child) => (
-            <NavLink
-              key={child.to}
-              to={child.to}
-              className={({ isActive }) => `${styles.dropdownLink} ${isActive ? styles.active : ""}`}
-              role="menuitem"
-              onClick={() => setOpen(false)}
-            >
-              {child.label}
-            </NavLink>
-          ))}
+          {isAccountItem && authSession ? (
+            <>
+              <div className={styles.accountSummary}>
+                <span>{authSession.name || "Signed in"}</span>
+                {authSession.email && <small>{authSession.email}</small>}
+              </div>
+              <NavLink
+                to="/"
+                className={({ isActive }) => `${styles.dropdownLink} ${isActive ? styles.active : ""}`}
+                role="menuitem"
+                onClick={() => setOpen(false)}
+              >
+                Home
+              </NavLink>
+              <button
+                className={`${styles.dropdownLink} ${styles.dropdownButton}`}
+                role="menuitem"
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  onLogout();
+                }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            item.children!.map((child) => (
+              <NavLink
+                key={child.to}
+                to={child.to}
+                className={({ isActive }) => `${styles.dropdownLink} ${isActive ? styles.active : ""}`}
+                role="menuitem"
+                onClick={() => setOpen(false)}
+              >
+                {child.label}
+              </NavLink>
+            ))
+          )}
         </div>
       )}
     </li>

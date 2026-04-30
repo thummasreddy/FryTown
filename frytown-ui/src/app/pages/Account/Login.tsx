@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowRight, FaCheckCircle, FaEnvelope, FaFacebook, FaGoogle, FaLock } from 'react-icons/fa';
 import { frytownApi, type AuthResponse } from '../../api/frytownApi';
 import styles from './Register.module.css';
 
 const AUTH_STORAGE_KEY = 'frytown-auth-v1';
+const AUTH_SESSION_CHANGED_EVENT = 'frytown-auth-session-changed';
 const REMEMBER_EMAIL_KEY = 'frytown-remember-email';
 
 function saveAuthSession(auth: AuthResponse) {
@@ -25,6 +26,7 @@ function saveAuthSession(auth: AuthResponse) {
       emailVerified: auth.emailVerified,
     })
   );
+  window.dispatchEvent(new Event(AUTH_SESSION_CHANGED_EVENT));
 }
 
 function readRememberedEmail() {
@@ -36,6 +38,7 @@ function readRememberedEmail() {
 }
 
 export default function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: readRememberedEmail(),
     password: '',
@@ -89,7 +92,7 @@ export default function Login() {
         window.localStorage.removeItem(REMEMBER_EMAIL_KEY);
       }
 
-      setSubmitMessage(`Welcome back${authResponse.name ? `, ${authResponse.name}` : ''}.`);
+      navigate('/', { replace: true });
     } catch (error) {
       const message = error instanceof Error ? error.message : '';
       setErrors({

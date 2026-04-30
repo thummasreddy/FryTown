@@ -191,12 +191,14 @@
 
 .dropdownLink {
   display: block;
+  width: 100%;
   padding: 10px 16px;
   border-radius: var(--radius-sm);
   text-decoration: none;
   color: var(--text-main);
   transition: var(--transition);
   font-size: 0.95rem;
+  text-align: left;
 }
 
 .dropdownLink:hover {
@@ -209,6 +211,36 @@
   color: var(--primary);
   font-weight: 600;
   background: rgba(192, 0, 0, 0.05);
+}
+
+.dropdownButton {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.accountSummary {
+  padding: 10px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+  color: var(--text-main);
+}
+
+.accountSummary span,
+.accountSummary small {
+  display: block;
+}
+
+.accountSummary span {
+  font-weight: 800;
+}
+
+.accountSummary small {
+  margin-top: 2px;
+  color: var(--text-light);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
 }
 
 

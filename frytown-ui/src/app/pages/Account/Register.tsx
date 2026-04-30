@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   FaArrowRight,
   FaCheckCircle,
@@ -14,6 +14,7 @@ import { frytownApi, type AuthResponse } from '../../api/frytownApi';
 import styles from './Register.module.css';
 
 const AUTH_STORAGE_KEY = 'frytown-auth-v1';
+const AUTH_SESSION_CHANGED_EVENT = 'frytown-auth-session-changed';
 
 function saveAuthSession(auth: AuthResponse) {
   if (typeof window === 'undefined') {
@@ -33,9 +34,12 @@ function saveAuthSession(auth: AuthResponse) {
       emailVerified: auth.emailVerified,
     })
   );
+  window.dispatchEvent(new Event(AUTH_SESSION_CHANGED_EVENT));
 }
 
 export default function Register() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.documentElement.classList.add('noScroll');
     document.body.classList.add('noScroll');
@@ -101,7 +105,7 @@ export default function Register() {
       });
 
       saveAuthSession(authResponse);
-      setSubmitMessage('Account created. You are signed in.');
+      navigate('/', { replace: true });
     } catch (error) {
       const message = error instanceof Error ? error.message : '';
       setSubmitMessage(message || 'Could not create your account right now. Please try again.');
