@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { frytownApi } from '../../api/frytownApi';
+import { isAuthSessionActive, readAuthSession, subscribeToAuthSession } from '../../auth/authSession';
 import { useCart } from '../../context/useCart';
 import styles from './Cart.module.css';
 
@@ -23,6 +24,8 @@ export default function Cart() {
   const { cart, removeItem, updateQuantity, clearCart } = useCart();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => isAuthSessionActive(readAuthSession()));
+  const [checkoutNotice, setCheckoutNotice] = useState('');
   const [quoteState, setQuoteState] = useState<QuoteState>({
     requestKey: '',
     status: 'idle',
@@ -54,6 +57,20 @@ export default function Cart() {
       items,
     };
   }, [cart.items]);
+
+  useEffect(() => {
+    const handleAuthSessionChange = () => {
+      const hasSession = isAuthSessionActive(readAuthSession());
+
+      setIsAuthenticated(hasSession);
+
+      if (!hasSession) {
+        setCheckoutNotice('');
+      }
+    };
+
+    return subscribeToAuthSession(handleAuthSessionChange);
+  }, []);
 
   useEffect(() => {
     if (!quotePayload) {
@@ -112,8 +129,13 @@ export default function Cart() {
   };
 
   const handleCheckout = () => {
-    setIsOpen(false);
-    navigate('/account/register');
+    if (!isAuthenticated) {
+      setIsOpen(false);
+      navigate('/account/register');
+      return;
+    }
+
+    setCheckoutNotice('You are signed in. Online checkout is still being connected.');
   };
 
   const isActiveQuote = quotePayload !== null && quoteState.requestKey === quotePayload.requestKey;
@@ -124,6 +146,11 @@ export default function Cart() {
   const subtotal = quoteTotal ?? Number(cart.total);
   const tax = Math.round(subtotal * 0.18);
   const grandTotal = subtotal + tax;
+  const cartNoticeMessage =
+    checkoutNotice ||
+    (quoteId
+      ? 'Pricing is synced with the local FryTown API.'
+      : quoteError || 'Online checkout opens soon, but your cart now stays saved in this browser.');
 
   return (
     <div className={styles.cartContainer}>
@@ -265,11 +292,7 @@ export default function Cart() {
                         ? `API quote #${quoteId}`
                         : 'Order preview only.'}
                   </strong>
-                  <span>
-                    {quoteId
-                      ? 'Pricing is synced with the local FryTown API.'
-                      : quoteError || 'Online checkout opens soon, but your cart now stays saved in this browser.'}
-                  </span>
+                  <span>{cartNoticeMessage}</span>
                 </div>
 
                 <div className={styles.cartActions}>
@@ -277,7 +300,7 @@ export default function Cart() {
                     Clear Cart
                   </button>
                   <button className={styles.checkoutButton} onClick={handleCheckout} type="button">
-                    Sign Up to Checkout
+                    {isAuthenticated ? 'Checkout' : 'Sign Up to Checkout'}
                   </button>
                 </div>
               </div>

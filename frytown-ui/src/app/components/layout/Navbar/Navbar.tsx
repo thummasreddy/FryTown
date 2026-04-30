@@ -1,45 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FaBars, FaChevronDown } from "react-icons/fa";
+import { clearAuthSession, readAuthSession, subscribeToAuthSession, type AuthSession } from "../../../auth/authSession";
 import { NAV_ITEMS, type NavGroup } from "./navbar.data";
 import brandLogo from "../../../assets/Brand_FryTown.png";
 import MobileMenu from "./MobileMenu";
 import Cart from "../../Cart/Cart";
 import styles from "./Navbar.module.css";
-
-const AUTH_STORAGE_KEY = "frytown-auth-v1";
-const AUTH_SESSION_CHANGED_EVENT = "frytown-auth-session-changed";
-
-type AuthSession = {
-  id?: number;
-  name?: string;
-  email?: string;
-  token?: string | null;
-};
-
-function readAuthSession(): AuthSession | null {
-  if (typeof window === "undefined") {
-    return null;
-  }
-
-  try {
-    const rawSession = window.localStorage.getItem(AUTH_STORAGE_KEY);
-
-    if (!rawSession) {
-      return null;
-    }
-
-    const parsedSession = JSON.parse(rawSession) as AuthSession;
-
-    if (!parsedSession?.token && !parsedSession?.email) {
-      return null;
-    }
-
-    return parsedSession;
-  } catch {
-    return null;
-  }
-}
 
 const UserIcon = ({ showText = true }: { showText?: boolean }) => (
   <div className={styles.userIconWrapper}>
@@ -85,23 +52,16 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleStorageChange = () => {
+    const handleAuthSessionChange = () => {
       setAuthSession(readAuthSession());
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener(AUTH_SESSION_CHANGED_EVENT, handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener(AUTH_SESSION_CHANGED_EVENT, handleStorageChange);
-    };
+    return subscribeToAuthSession(handleAuthSessionChange);
   }, []);
 
   const handleLogout = () => {
-    window.localStorage.removeItem(AUTH_STORAGE_KEY);
+    clearAuthSession();
     setAuthSession(null);
-    window.dispatchEvent(new Event(AUTH_SESSION_CHANGED_EVENT));
     setMobileOpen(false);
     navigate("/", { replace: true });
   };

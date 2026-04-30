@@ -10,32 +10,9 @@ import {
   FaPhone,
   FaUser,
 } from 'react-icons/fa';
-import { frytownApi, type AuthResponse } from '../../api/frytownApi';
+import { frytownApi } from '../../api/frytownApi';
+import { saveAuthSession } from '../../auth/authSession';
 import styles from './Register.module.css';
-
-const AUTH_STORAGE_KEY = 'frytown-auth-v1';
-const AUTH_SESSION_CHANGED_EVENT = 'frytown-auth-session-changed';
-
-function saveAuthSession(auth: AuthResponse) {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  window.localStorage.setItem(
-    AUTH_STORAGE_KEY,
-    JSON.stringify({
-      id: auth.id,
-      email: auth.email,
-      name: auth.name,
-      phone: auth.phone,
-      token: auth.token,
-      refreshToken: auth.refreshToken,
-      role: auth.role,
-      emailVerified: auth.emailVerified,
-    })
-  );
-  window.dispatchEvent(new Event(AUTH_SESSION_CHANGED_EVENT));
-}
 
 export default function Register() {
   const navigate = useNavigate();
