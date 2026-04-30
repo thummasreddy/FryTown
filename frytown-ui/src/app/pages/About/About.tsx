@@ -161,7 +161,7 @@ export default function About() {
           />
           <h2>Ready to plan your FryTown run?</h2>
           <p>
-            Start with the menu, build your own box, or check the latest bundles while online ordering moves toward launch.
+            Start with the menu, build your own box, or sign in to keep FryTown favorites close.
           </p>
         </div>
         <div className={styles.heroActions}>
@@ -169,7 +169,7 @@ export default function About() {
             View offers
           </Link>
           <Link className={styles.secondaryButton} to="/account/register">
-            Join launch updates
+            Sign up
           </Link>
         </div>
       </section>

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { frytownApi } from '../../api/frytownApi';
 import { useCart } from '../../context/useCart';
 import styles from './Cart.module.css';
 
@@ -10,10 +11,92 @@ const formatPrice = (price: number) =>
     maximumFractionDigits: 0,
   }).format(price);
 
+type QuoteState = {
+  requestKey: string;
+  status: 'idle' | 'loading' | 'success' | 'error';
+  total?: number;
+  quoteId?: number;
+  message?: string;
+};
+
 export default function Cart() {
   const { cart, removeItem, updateQuantity, clearCart } = useCart();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [quoteState, setQuoteState] = useState<QuoteState>({
+    requestKey: '',
+    status: 'idle',
+  });
+  const quotePayload = useMemo(() => {
+    if (cart.items.length === 0) {
+      return null;
+    }
+
+    const quoteItems = cart.items
+      .map((item) => ({
+        item,
+        backendId: Number(item.menuItemId ?? item.id),
+      }))
+      .filter(({ backendId }) => Number.isInteger(backendId) && backendId > 0);
+
+    if (quoteItems.length !== cart.items.length) {
+      return null;
+    }
+
+    const items = quoteItems.map(({ item, backendId }) => ({
+      id: backendId,
+      quantity: item.quantity,
+      ...(item.customizations ? { customizations: item.customizations } : {}),
+    }));
+
+    return {
+      requestKey: JSON.stringify(items),
+      items,
+    };
+  }, [cart.items]);
+
+  useEffect(() => {
+    if (!quotePayload) {
+      return;
+    }
+
+    let isCurrent = true;
+
+    Promise.resolve().then(() => {
+      if (isCurrent) {
+        setQuoteState({
+          requestKey: quotePayload.requestKey,
+          status: 'loading',
+        });
+      }
+    });
+
+    frytownApi
+      .getCartQuote({
+        items: quotePayload.items,
+      })
+      .then((quote) => {
+        if (!isCurrent) return;
+        setQuoteState({
+          requestKey: quotePayload.requestKey,
+          status: 'success',
+          total: quote.total,
+          quoteId: quote.quoteId,
+        });
+      })
+      .catch(() => {
+        if (!isCurrent) return;
+        setQuoteState({
+          requestKey: quotePayload.requestKey,
+          status: 'error',
+          message: 'Using browser pricing because the API quote is unavailable.',
+        });
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [quotePayload]);
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
     updateQuantity(id, newQuantity);
@@ -30,11 +113,17 @@ export default function Cart() {
 
   const handleCheckout = () => {
     setIsOpen(false);
-    navigate('/account/register', { state: { fromCart: true } });
+    navigate('/account/register');
   };
 
-  const tax = Math.round(Number(cart.total) * 0.18);
-  const grandTotal = Number(cart.total) + tax;
+  const isActiveQuote = quotePayload !== null && quoteState.requestKey === quotePayload.requestKey;
+  const quoteTotal = isActiveQuote && quoteState.status === 'success' ? quoteState.total : null;
+  const quoteId = isActiveQuote && quoteState.status === 'success' ? quoteState.quoteId : null;
+  const quoteError = isActiveQuote && quoteState.status === 'error' ? quoteState.message : '';
+  const isQuoteLoading = isActiveQuote && quoteState.status === 'loading';
+  const subtotal = quoteTotal ?? Number(cart.total);
+  const tax = Math.round(subtotal * 0.18);
+  const grandTotal = subtotal + tax;
 
   return (
     <div className={styles.cartContainer}>
@@ -156,7 +245,7 @@ export default function Cart() {
                 <div className={styles.cartSummary}>
                   <div className={styles.summaryRow}>
                     <span>Subtotal ({cart.itemCount} items)</span>
-                    <span>{formatPrice(Number(cart.total))}</span>
+                    <span>{formatPrice(subtotal)}</span>
                   </div>
                   <div className={styles.summaryRow}>
                     <span>Tax</span>
@@ -169,8 +258,18 @@ export default function Cart() {
                 </div>
 
                 <div className={styles.cartNotice}>
-                  <strong>Order preview only.</strong>
-                  <span>Online checkout opens soon, but your cart now stays saved in this browser.</span>
+                  <strong>
+                    {isQuoteLoading
+                      ? 'Checking price...'
+                      : quoteId
+                        ? `API quote #${quoteId}`
+                        : 'Order preview only.'}
+                  </strong>
+                  <span>
+                    {quoteId
+                      ? 'Pricing is synced with the local FryTown API.'
+                      : quoteError || 'Online checkout opens soon, but your cart now stays saved in this browser.'}
+                  </span>
                 </div>
 
                 <div className={styles.cartActions}>
@@ -178,7 +277,7 @@ export default function Cart() {
                     Clear Cart
                   </button>
                   <button className={styles.checkoutButton} onClick={handleCheckout} type="button">
-                    Get Launch Updates
+                    Sign Up to Checkout
                   </button>
                 </div>
               </div>

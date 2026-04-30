@@ -24,7 +24,7 @@ const footerLinks = [
       { name: 'About Us', to: '/about' },
       { name: 'Promotions', to: '/promotions/combos' },
       { name: 'Franchising', to: '/franchising/why' },
-      { name: 'Launch Updates', to: '/account/register' },
+      { name: 'Sign Up', to: '/account/register' },
     ],
   },
   {
@@ -32,7 +32,7 @@ const footerLinks = [
     links: [
       { name: 'Build Your Fries', to: '/menu/build-your-fries' },
       { name: 'Current Offers', to: '/promotions/offers' },
-      { name: 'Member Preview', to: '/account/login' },
+      { name: 'Login', to: '/account/login' },
       { name: 'Franchise Info', to: '/franchising/apply' },
     ],
   },

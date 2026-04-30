@@ -1,52 +1,58 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaPhone, FaArrowRight, FaCheckCircle } from 'react-icons/fa';
-import { useCart } from '../../context/useCart';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  FaArrowRight,
+  FaCheckCircle,
+  FaEnvelope,
+  FaFacebook,
+  FaGoogle,
+  FaLock,
+  FaPhone,
+  FaUser,
+} from 'react-icons/fa';
+import { frytownApi, type AuthResponse } from '../../api/frytownApi';
 import styles from './Register.module.css';
 
-const LAUNCH_INTEREST_STORAGE_KEY = 'frytown-launch-interest-v1';
+const AUTH_STORAGE_KEY = 'frytown-auth-v1';
 
-type LaunchInterestForm = {
-  fullName: string;
-  email: string;
-  phone: string;
-};
-
-const emptyForm: LaunchInterestForm = {
-  fullName: '',
-  email: '',
-  phone: '',
-};
-
-function readStoredInterest(): LaunchInterestForm {
+function saveAuthSession(auth: AuthResponse) {
   if (typeof window === 'undefined') {
-    return emptyForm;
+    return;
   }
 
-  try {
-    const rawValue = window.localStorage.getItem(LAUNCH_INTEREST_STORAGE_KEY);
-
-    if (!rawValue) {
-      return emptyForm;
-    }
-
-    const parsedValue = JSON.parse(rawValue);
-
-    return {
-      fullName: typeof parsedValue?.fullName === 'string' ? parsedValue.fullName : '',
-      email: typeof parsedValue?.email === 'string' ? parsedValue.email : '',
-      phone: typeof parsedValue?.phone === 'string' ? parsedValue.phone : '',
-    };
-  } catch {
-    return emptyForm;
-  }
+  window.localStorage.setItem(
+    AUTH_STORAGE_KEY,
+    JSON.stringify({
+      id: auth.id,
+      email: auth.email,
+      name: auth.name,
+      phone: auth.phone,
+      token: auth.token,
+      refreshToken: auth.refreshToken,
+      role: auth.role,
+      emailVerified: auth.emailVerified,
+    })
+  );
 }
 
 export default function Register() {
-  const location = useLocation();
-  const { cart } = useCart();
-  const fromCart = (location.state as { fromCart?: boolean } | null)?.fromCart === true;
-  const [formData, setFormData] = useState<LaunchInterestForm>(() => readStoredInterest());
+  useEffect(() => {
+    document.documentElement.classList.add('noScroll');
+    document.body.classList.add('noScroll');
+
+    return () => {
+      document.documentElement.classList.remove('noScroll');
+      document.body.classList.remove('noScroll');
+    };
+  }, []);
+
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
@@ -61,13 +67,19 @@ export default function Register() {
     const nextErrors: Record<string, string> = {};
 
     if (!formData.fullName.trim()) nextErrors.fullName = 'Full name is required';
-    else if (formData.fullName.length < 3) nextErrors.fullName = 'Name must be at least 3 characters';
+    else if (formData.fullName.trim().length < 3) nextErrors.fullName = 'Name must be at least 3 characters';
 
     if (!formData.email) nextErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) nextErrors.email = 'Please enter a valid email address';
 
     if (!formData.phone) nextErrors.phone = 'Phone number is required';
     else if (!/^\+?[0-9\s-]{10,20}$/.test(formData.phone)) nextErrors.phone = 'Please enter a valid phone number';
+
+    if (!formData.password) nextErrors.password = 'Password is required';
+    else if (formData.password.length < 8) nextErrors.password = 'Password must be at least 8 characters';
+
+    if (!formData.confirmPassword) nextErrors.confirmPassword = 'Confirm your password';
+    else if (formData.password !== formData.confirmPassword) nextErrors.confirmPassword = 'Passwords do not match';
 
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
@@ -81,36 +93,38 @@ export default function Register() {
     setSubmitMessage('');
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      window.localStorage.setItem(LAUNCH_INTEREST_STORAGE_KEY, JSON.stringify(formData));
+      const authResponse = await frytownApi.register({
+        name: formData.fullName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        password: formData.password,
+      });
 
-      setSubmitMessage(
-        fromCart && cart.itemCount > 0
-          ? 'Thanks. Your details and current cart are saved in this browser while online ordering is still in preview.'
-          : 'Thanks. Your launch update request is saved in this browser while member accounts are still in preview.'
-      );
-    } catch {
-      setSubmitMessage('We could not save your details in this browser. Please try again.');
+      saveAuthSession(authResponse);
+      setSubmitMessage('Account created. You are signed in.');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      setSubmitMessage(message || 'Could not create your account right now. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const isSuccess = submitMessage.startsWith('Thanks.');
+  const isSuccess = submitMessage.startsWith('Account created');
 
   return (
     <main className={styles.registerContainer}>
       <section className={styles.leftSection} aria-hidden="true">
         <div className={styles.heroInner}>
-          <h2 className={styles.heroTitle}>Be First When FryTown Goes Live</h2>
+          <h2 className={styles.heroTitle}>Join FryTown</h2>
           <p className={styles.heroSubtitle}>
-            Join the launch updates list so you can hear when online ordering, member perks, and checkout are ready.
+            Create an account for faster checkout, saved favorites, and FryTown rewards.
           </p>
 
           <ul className={styles.heroList}>
-            <li><FaCheckCircle /> Hear about launch-day offers and bundle drops</li>
-            <li><FaCheckCircle /> Keep your current cart ready in this browser</li>
-            <li><FaCheckCircle /> Know when member accounts and ordering open</li>
+            <li><FaCheckCircle /> Exclusive offers and coupon drops</li>
+            <li><FaCheckCircle /> Save addresses and reorder faster</li>
+            <li><FaCheckCircle /> Earn points and redeem rewards</li>
           </ul>
 
           <div className={styles.heroGlow} />
@@ -120,19 +134,19 @@ export default function Register() {
       <section className={styles.rightSection}>
         <div className={styles.registerCard}>
           <div className={styles.registerHeader}>
-            <h1>Join Launch Updates</h1>
-            <p>
-              {fromCart && cart.itemCount > 0
-                ? `You currently have ${cart.itemCount} item${cart.itemCount === 1 ? '' : 's'} in your cart.`
-                : 'Online accounts are still in preview for now.'}
-            </p>
+            <h1>Sign Up</h1>
           </div>
 
-          <div className={`${styles.statusBox} ${styles.previewNote}`}>
-            {fromCart && cart.itemCount > 0
-              ? 'Online checkout is coming soon. Leave your details here and we will keep this browser ready for launch.'
-              : 'This preview saves your interest locally in this browser while the live signup flow is still being connected.'}
+          <div className={styles.socialAuth}>
+            <button type="button" className={`${styles.socialButton} ${styles.googleButton}`}>
+              <FaGoogle /> Sign up with Google
+            </button>
+            <button type="button" className={`${styles.socialButton} ${styles.facebookButton}`}>
+              <FaFacebook /> Sign up with Facebook
+            </button>
           </div>
+
+          <div className={styles.divider}><span>or</span></div>
 
           <form onSubmit={handleSubmit} className={styles.registerForm}>
             {submitMessage && (
@@ -151,6 +165,7 @@ export default function Register() {
                   onChange={handleChange}
                   placeholder="Full Name *"
                   className={`${styles.inputField} ${errors.fullName ? styles.inputError : ''}`}
+                  autoComplete="name"
                 />
               </div>
               {errors.fullName && <span className={styles.errorText}>{errors.fullName}</span>}
@@ -166,6 +181,7 @@ export default function Register() {
                   onChange={handleChange}
                   placeholder="Email Address *"
                   className={`${styles.inputField} ${errors.email ? styles.inputError : ''}`}
+                  autoComplete="email"
                 />
               </div>
               {errors.email && <span className={styles.errorText}>{errors.email}</span>}
@@ -181,19 +197,53 @@ export default function Register() {
                   onChange={handleChange}
                   placeholder="Phone Number *"
                   className={`${styles.inputField} ${errors.phone ? styles.inputError : ''}`}
+                  autoComplete="tel"
                 />
               </div>
               {errors.phone && <span className={styles.errorText}>{errors.phone}</span>}
             </div>
 
+            <div className={styles.formGroup}>
+              <div className={styles.inputContainer}>
+                <FaLock className={styles.inputIcon} />
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Create a password *"
+                  className={`${styles.inputField} ${errors.password ? styles.inputError : ''}`}
+                  autoComplete="new-password"
+                />
+              </div>
+              {errors.password && <span className={styles.errorText}>{errors.password}</span>}
+              <div className={styles.passwordHint}>Use 8+ characters, include at least 1 number</div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <div className={styles.inputContainer}>
+                <FaLock className={styles.inputIcon} />
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm your password *"
+                  className={`${styles.inputField} ${errors.confirmPassword ? styles.inputError : ''}`}
+                  autoComplete="new-password"
+                />
+              </div>
+              {errors.confirmPassword && <span className={styles.errorText}>{errors.confirmPassword}</span>}
+            </div>
+
             <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-              {isSubmitting ? 'Saving Your Interest...' : 'Save My Launch Updates'}
+              {isSubmitting ? 'Creating Account...' : 'Create Account'}
               <FaArrowRight className={styles.buttonIcon} />
             </button>
           </form>
 
           <div className={styles.loginLink}>
-            Looking for sign-in? <Link to="/account/login">View the member preview</Link>
+            Already have an account? <Link to="/account/login">Log in</Link>
           </div>
         </div>
       </section>

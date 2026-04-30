@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Menu.module.css';
+import { frytownApi } from '../../api/frytownApi';
+import type { ApiMenuCategory, ApiMenuItem } from '../../api/frytownApi';
 import { useCart } from '../../context/useCart';
 
 import OriginalFries from '../../assets/Original_French_Fries.png';
@@ -61,6 +63,7 @@ type FriesCustomization = {
 
 interface MenuItem {
   id: string;
+  menuItemId?: string;
   name: string;
   description: string;
   price: number;
@@ -82,6 +85,145 @@ const MENU_TABS: { id: MenuTab; label: string }[] = [
   { id: 'dips', label: 'Dipping Sauces' },
   { id: 'beverages', label: 'Beverages' },
 ];
+
+type ApiMenuBuckets = {
+  classic: MenuItem[];
+  specialty: MenuItem[];
+  combos: MenuItem[];
+  dips: MenuItem[];
+  beverages: MenuItem[];
+  buildItemId?: string;
+};
+
+const MENU_IMAGE_BY_FILE: Record<string, string> = {
+  'Original_French_Fries.png': OriginalFries,
+  'Crispy_Crinkles_Fries.png': CrispyKrinkle,
+  'Curly_Fries.png': CurlyFries,
+  'Waffle French Fries.png': WaffleFries,
+  'Tater Tots.png': TaterTots,
+  'FryTown_Classic_Fries.png': FryTownClassicFries,
+  'FryTown_Crinkle_Fries.png': FryTownCrinkleFries,
+  'FryTown_Curly_Fries.png': FryTownCurlyFries,
+  'FryTown_Potato_Wedges.png': FryTownPotatoWedges,
+  'FryTown_Sweet_Potato_Fries.png': FryTownSweetPotatoFries,
+  'FryTown_Tater_tots.png': FryTownTaterTots,
+  'FryTown_Waffle_Fries.png': FryTownWaffleFries,
+  'Cheese Dip.png': CheeseDip,
+  'Garlic Mayo.png': GarlicMayo,
+  'Mint Chutney.png': MintChutney,
+  'Sweet Chili.png': SweetChili,
+  'BBQ Sauce.png': BBQSauce,
+  'Sriracha Mayo.png': SrirachaMayo,
+  'Coca-Cola.png': CocaCola,
+  'Sprite.png': Sprite,
+  'Mango Lassi.png': MangoLassi,
+  'Masala Chai.png': MasalaChai,
+  'Iced Tea.png': IcedTea,
+  'lemonade.png': Lemonade,
+  'Mango_lemonade.png': MangoLemonade,
+  'Strawberry_lemonade.png': StrawberryLemonade,
+  'Watermelon_lemonade.png': WatermelonLemonade,
+  'buttermilk.png': Buttermilk,
+};
+
+const normalizeLabel = (value: string) => value.trim().toLowerCase();
+
+const createApiMenuBuckets = (): ApiMenuBuckets => ({
+  classic: [],
+  specialty: [],
+  combos: [],
+  dips: [],
+  beverages: [],
+});
+
+const hasApiMenuItems = (menu: ApiMenuBuckets) =>
+  menu.classic.length > 0 ||
+  menu.specialty.length > 0 ||
+  menu.combos.length > 0 ||
+  menu.dips.length > 0 ||
+  menu.beverages.length > 0;
+
+const resolveApiImage = (image?: string | null) => {
+  if (!image) {
+    return OriginalFries;
+  }
+
+  if (/^(https?:|data:|\/)/i.test(image)) {
+    return image;
+  }
+
+  const imageFile = image.split(/[\\/]/).pop() ?? image;
+  const imageEntry = Object.entries(MENU_IMAGE_BY_FILE).find(
+    ([fileName]) => normalizeLabel(fileName) === normalizeLabel(imageFile)
+  );
+
+  return imageEntry?.[1] ?? OriginalFries;
+};
+
+const mapApiMenuItem = (item: ApiMenuItem, categoryName: string): MenuItem => {
+  const name = item.name || 'Menu Item';
+  const normalizedName = normalizeLabel(name);
+  const normalizedCategory = normalizeLabel(categoryName);
+
+  return {
+    id: String(item.id),
+    menuItemId: String(item.id),
+    name,
+    description: item.description ?? '',
+    price: item.price ?? item.basePrice ?? 0,
+    image: resolveApiImage(item.image),
+    popular:
+      normalizedName.includes('classic') ||
+      normalizedName.includes('combo') ||
+      normalizedName.includes('mango'),
+    spicy:
+      normalizedName.includes('spicy') ||
+      normalizedName.includes('masala') ||
+      normalizedName.includes('tandoori') ||
+      normalizedName.includes('sriracha'),
+    vegetarian: !normalizedName.includes('chicken'),
+    combo: normalizedCategory.includes('combo') || normalizedName.includes('combo'),
+  };
+};
+
+const mapApiMenu = (categories: ApiMenuCategory[]) => {
+  const menu = createApiMenuBuckets();
+
+  categories.forEach((category) => {
+    const categoryName = category.name ?? '';
+    const normalizedCategory = normalizeLabel(categoryName);
+    const items = (category.items ?? []).map((item) => mapApiMenuItem(item, categoryName));
+
+    if (normalizedCategory.includes('build')) {
+      menu.buildItemId = items[0]?.menuItemId;
+      return;
+    }
+
+    if (normalizedCategory.includes('dip') || normalizedCategory.includes('sauce')) {
+      menu.dips.push(...items);
+      return;
+    }
+
+    if (normalizedCategory.includes('beverage') || normalizedCategory.includes('drink')) {
+      menu.beverages.push(...items);
+      return;
+    }
+
+    if (normalizedCategory.includes('combo')) {
+      menu.combos.push(...items);
+      return;
+    }
+
+    if (normalizedCategory.includes('specialty') || normalizedCategory.includes('loaded')) {
+      menu.specialty.push(...items);
+      return;
+    }
+
+    menu.classic.push(...items);
+  });
+
+  return menu;
+};
 
 const formatPrice = (price: number) =>
   new Intl.NumberFormat('en-IN', {
@@ -119,6 +261,29 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
     style: '',
     flavors: [],
   });
+  const [apiMenu, setApiMenu] = useState<ApiMenuBuckets | null>(null);
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    frytownApi
+      .getMenu()
+      .then((categories) => {
+        if (!isCurrent) return;
+
+        const nextMenu = mapApiMenu(categories);
+        setApiMenu(hasApiMenuItems(nextMenu) ? nextMenu : null);
+      })
+      .catch(() => {
+        if (isCurrent) {
+          setApiMenu(null);
+        }
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
 
   const sizes: Size[] = [
     { name: 'Mini', price: 69 },
@@ -366,6 +531,14 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
     { id: 'buttermilk', name: 'Buttermilk', description: 'Traditional Indian buttermilk.', price: 30, image: Buttermilk, vegetarian: true },
   ];
 
+  const activeFriesMenu = apiMenu?.classic.length ? apiMenu.classic : friesMenu;
+  const activeSpecialtyMenu =
+    apiMenu && (apiMenu.specialty.length > 0 || apiMenu.combos.length > 0)
+      ? [...apiMenu.specialty, ...apiMenu.combos]
+      : specialtyMenu;
+  const activeDipsMenu = apiMenu?.dips.length ? apiMenu.dips : dipsMenu;
+  const activeDrinksMenu = apiMenu?.beverages.length ? apiMenu.beverages : drinksMenu;
+
   const handleTabChange = (tab: MenuTab) => {
     navigate(`/menu/${tab}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -403,6 +576,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
 
     addItem({
       id: `custom-${crypto.randomUUID()}`,
+      ...(apiMenu?.buildItemId ? { menuItemId: apiMenu.buildItemId } : {}),
       name: 'Custom Build Your Fries',
       price: calculateTotal(),
       image: OriginalFries,
@@ -424,6 +598,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
   const handleAddMenuItemToCart = (item: MenuItem) => {
     addItem({
       id: item.id,
+      ...(item.menuItemId ? { menuItemId: item.menuItemId } : {}),
       name: item.name,
       price: item.price,
       image: item.image,
@@ -641,7 +816,7 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
         {activeTab === 'classic' && (
           <>
             <h2 className={styles.sectionHeader}>Classic Fries</h2>
-            <div className={styles.menuGrid}>{renderMenuItems(friesMenu)}</div>
+            <div className={styles.menuGrid}>{renderMenuItems(activeFriesMenu)}</div>
           </>
         )}
 
@@ -656,19 +831,19 @@ export default function Menu({ initialTab = 'classic' }: MenuProps) {
           <>
             <h2 className={styles.sectionHeader}>Specialty Fries</h2>
             <div className={styles.menuGrid}>
-              {renderMenuItems(specialtyMenu.filter((item) => !item.combo))}
+              {renderMenuItems(activeSpecialtyMenu.filter((item) => !item.combo))}
             </div>
 
             <h2 className={styles.sectionHeader}>Combos</h2>
             <div className={styles.menuGrid}>
-              {renderMenuItems(specialtyMenu.filter((item) => item.combo))}
+              {renderMenuItems(activeSpecialtyMenu.filter((item) => item.combo))}
             </div>
           </>
         )}
 
-        {activeTab === 'dips' && <div className={styles.menuGrid}>{renderMenuItems(dipsMenu)}</div>}
+        {activeTab === 'dips' && <div className={styles.menuGrid}>{renderMenuItems(activeDipsMenu)}</div>}
 
-        {activeTab === 'beverages' && <div className={styles.menuGrid}>{renderMenuItems(drinksMenu)}</div>}
+        {activeTab === 'beverages' && <div className={styles.menuGrid}>{renderMenuItems(activeDrinksMenu)}</div>}
       </div>
     </div>
   );

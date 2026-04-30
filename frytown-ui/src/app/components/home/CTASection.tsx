@@ -51,7 +51,7 @@ export function JoinFamilySection() {
       title="JOIN OUR FAMILY"
       subtitle="Become part of the FryTown family and enjoy exclusive offers, early access to new menu items, and special events."
       buttonText="Sign Up Now"
-      buttonLink="/signup"
+      buttonLink="/account/register"
       imageUrl="https://images.unsplash.com/photo-1606787366850-de6330128bfc"
       imageAlt="Happy family enjoying a meal together"
     />

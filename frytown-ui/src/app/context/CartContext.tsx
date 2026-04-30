@@ -4,6 +4,7 @@ import { CartContext } from './cartStore';
 
 export interface CartItem {
   id: string;
+  menuItemId?: string;
   name: string;
   price: number;
   quantity: number;
@@ -76,6 +77,7 @@ function readStoredCart(): CartState {
       )
       .map((item) => ({
         ...item,
+        menuItemId: typeof item.menuItemId === 'string' ? item.menuItemId : undefined,
         quantity: Math.max(1, Math.trunc(item.quantity)),
         image: typeof item.image === 'string' ? item.image : undefined,
         customizations: item.customizations

@@ -434,10 +434,71 @@ textarea:focus-visible {
   color: rgba(153, 27, 27, 0.95);
 }
 
-.previewNote {
-  background: #fff7eb;
-  border: 1px solid rgba(252, 172, 0, 0.28);
-  color: #7c4a02;
+.rememberForgot {
+  margin-top: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  color: rgba(15, 23, 42, 0.65);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.checkboxContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+}
+
+.checkboxInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.checkboxCustom {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.checkboxInput:checked + .checkboxCustom {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 8px 18px rgba(252, 172, 0, 0.22);
+}
+
+.checkboxInput:checked + .checkboxCustom::after {
+  content: "";
+  width: 8px;
+  height: 4px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+.forgotPassword,
+.backToLogin {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.forgotPassword:hover,
+.backToLogin:hover {
+  text-decoration: underline;
+}
+
+.successMessage {
+  color: var(--text-light);
 }
 
 /* Submit */
@@ -457,6 +518,7 @@ textarea:focus-visible {
   text-transform: uppercase;
   color: #fff;
   background: var(--accent);
+  text-decoration: none;
   transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
   position: relative;
   overflow: hidden;
@@ -492,31 +554,23 @@ textarea:focus-visible {
   transform: translateY(1px);
 }
 
-.actionStack {
-  display: grid;
-  gap: 0.8rem;
+.backIcon {
+  margin-right: 0.35rem;
+  transform: translateY(1px);
 }
 
-.secondaryAction {
-  width: 100%;
-  min-height: 52px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--bg-white);
-  color: var(--text-main);
-  text-decoration: none;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-}
-
-.secondaryAction:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+.linkButton {
+  border: 0;
+  padding: 0;
+  background: transparent;
   color: var(--primary);
-  border-color: rgba(252, 172, 0, 0.35);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.linkButton:hover {
+  text-decoration: underline;
 }
 
 /* Footer link */
@@ -570,6 +624,11 @@ textarea:focus-visible {
 
   .registerHeader h1 {
     font-size: 1.9rem;
+  }
+
+  .rememberForgot {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 
